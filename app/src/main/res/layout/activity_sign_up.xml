@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_sign_up"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_signup"
+    android:padding="15dp"
+    tools:context="poly.fall16.pro2051.group8.raovat.Activities.SignUpActivity"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tvLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Đăng ký"
+        android:layout_gravity="center_horizontal"
+        android:textSize="60sp"
+        android:textColor="@color/white"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"/>
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/etUser"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nhập tài khoản"
+        app:met_floatingLabel="highlight"
+        app:met_textColor="@color/white"
+        app:met_iconLeft="@drawable/ic_user_50px_white"
+        app:met_iconPadding="0dp"
+        app:met_minCharacters="5"
+        app:met_maxCharacters="16"
+        app:met_primaryColor="@color/white"/>
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nhập mật khẩu"
+        android:inputType="textPassword"
+        app:met_floatingLabel="highlight"
+        app:met_textColor="@color/white"
+        app:met_iconLeft="@drawable/ic_lock_50px_white"
+        app:met_iconPadding="0dp"
+        app:met_minCharacters="5"
+        app:met_maxCharacters="16"
+        app:met_primaryColor="@color/white"
+        android:id="@+id/etPassword" />
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nhập lại mật khẩu"
+        android:inputType="textPassword"
+        app:met_floatingLabel="highlight"
+        app:met_textColor="@color/white"
+        app:met_iconLeft="@drawable/ic_lock_50px_white"
+        app:met_iconPadding="0dp"
+        app:met_minCharacters="5"
+        app:met_maxCharacters="16"
+        app:met_clearButton="true"
+        app:met_primaryColor="@color/white"
+        android:id="@+id/etRePassword" />
+
+    <Button
+        android:id="@+id/btSignUp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/custom_border_button_transparent"
+        android:text="Đăng ký"
+        android:textColor="@color/white"
+        android:textAllCaps="false"
+        android:textSize="19sp"/>
+
+</LinearLayout>

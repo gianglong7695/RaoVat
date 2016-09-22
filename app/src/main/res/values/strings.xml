@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">Rao Vat</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- My Strings -->
+    <string name="pushingPostToolbar">Đăng bán</string>
+    <string name="pushingPostLine1">Nhấp để chọn ảnh</string>
+    <string name="pushingPostLine2">Danh mục</string>
+    <string name="pushingPostHint1">Tiêu đề sản phẩm</string>
+    <string name="pushingPostHint2">Danh mục</string>
+    <string name="pushingPostHint3">Khu vực</string>
+    <string name="pushingPostHint4">Địa chỉ giao dịch</string>
+    <string name="pushingPostHint5">Tình trạng</string>
+    <string name="pushingPostHint6">Giá bán</string>
+    <string name="pushingPostHint7">Chi tiết về mặt hàng ... </string>
+
+
+    <string name="continued">Tiếp tục</string>
+
+
+</resources>
