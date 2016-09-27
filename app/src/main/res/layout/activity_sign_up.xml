@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_signup"
     android:padding="15dp"
-    tools:context="poly.fall16.pro2051.group8.raovat.Activities.SignUpActivity"
+    tools:context="poly.fall16.pro2051.group8.raovat.activities.SignUpActivity"
     android:orientation="vertical">
 
     <TextView

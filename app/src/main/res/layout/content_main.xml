@@ -6,16 +6,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="poly.fall16.pro2051.group8.raovat.Activities.MainActivity"
+    tools:context="poly.fall16.pro2051.group8.raovat.activities.MainActivity"
     tools:showIn="@layout/app_bar_main"
     android:orientation="vertical">
 
-    <poly.fall16.pro2051.group8.raovat.SlidingTabs.SlidingTabLayout
+    <poly.fall16.pro2051.group8.raovat.slidingtabs.SlidingTabLayout
         android:id="@+id/stl_tab"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    </poly.fall16.pro2051.group8.raovat.SlidingTabs.SlidingTabLayout>
+    </poly.fall16.pro2051.group8.raovat.slidingtabs.SlidingTabLayout>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/vp_tab"

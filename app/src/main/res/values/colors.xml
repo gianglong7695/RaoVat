@@ -12,9 +12,11 @@
     <color name="colorAccent">#fc364a</color>
     <color name="background">#efefef</color>
     <color name="bg2">#f4f4f4</color>
+    <color name="grayLine">#cacaca</color>
 
     <color name="white">#FFF</color>
     <color name="white2">#dfd4d4</color>
+    <color name="redMoney">#d34045</color>
     <color name="black">#000</color>
     <color name="indigo_500">#3f51b5</color>
     <color name="indigo_700">#303f9f</color>

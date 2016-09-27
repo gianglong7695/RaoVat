@@ -1,4 +1,4 @@
-package poly.fall16.pro2051.group8.raovat.SlidingTabs;
+package poly.fall16.pro2051.group8.raovat.slidingtabs;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -6,10 +6,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import poly.fall16.pro2051.group8.raovat.Fragments.CategoryFragment;
-import poly.fall16.pro2051.group8.raovat.Fragments.MessageFragment;
-import poly.fall16.pro2051.group8.raovat.Fragments.NotificationFragment;
-import poly.fall16.pro2051.group8.raovat.Fragments.OtherFragment;
+import poly.fall16.pro2051.group8.raovat.fragments.CategoryFragment;
+import poly.fall16.pro2051.group8.raovat.fragments.MessageFragment;
+import poly.fall16.pro2051.group8.raovat.fragments.NotificationFragment;
+import poly.fall16.pro2051.group8.raovat.fragments.OtherFragment;
 
 /**
  * Created by giang on 5/4/2016.

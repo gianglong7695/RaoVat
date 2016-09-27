@@ -1,4 +1,4 @@
-package poly.fall16.pro2051.group8.raovat.Adapters;
+package poly.fall16.pro2051.group8.raovat.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import poly.fall16.pro2051.group8.raovat.Objects.CategoryObject;
+import poly.fall16.pro2051.group8.raovat.objects.CategoryObject;
 import poly.fall16.pro2051.group8.raovat.R;
 
 /**

@@ -1,4 +1,4 @@
-package poly.fall16.pro2051.group8.raovat.Objects;
+package poly.fall16.pro2051.group8.raovat.objects;
 
 /**
  * Created by giang on 9/20/2016.

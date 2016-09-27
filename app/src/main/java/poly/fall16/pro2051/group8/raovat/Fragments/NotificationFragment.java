@@ -1,4 +1,4 @@
-package poly.fall16.pro2051.group8.raovat.Fragments;
+package poly.fall16.pro2051.group8.raovat.fragments;
 
 
 import android.os.Bundle;

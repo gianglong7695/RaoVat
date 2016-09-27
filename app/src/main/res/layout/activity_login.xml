@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/bg_login"
-    tools:context="poly.fall16.pro2051.group8.raovat.Activities.LoginActivity">
+    tools:context="poly.fall16.pro2051.group8.raovat.activities.LoginActivity">
 
     <ScrollView
         android:layout_width="match_parent"

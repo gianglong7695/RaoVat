@@ -1,4 +1,4 @@
-package poly.fall16.pro2051.group8.raovat.Activities;
+package poly.fall16.pro2051.group8.raovat.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,8 +15,8 @@ import android.view.MenuItem;
 import android.view.View;
 
 import poly.fall16.pro2051.group8.raovat.R;
-import poly.fall16.pro2051.group8.raovat.SlidingTabs.SlidingTabLayout;
-import poly.fall16.pro2051.group8.raovat.SlidingTabs.TabAdapter;
+import poly.fall16.pro2051.group8.raovat.slidingtabs.SlidingTabLayout;
+import poly.fall16.pro2051.group8.raovat.slidingtabs.TabAdapter;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
-                Intent it = new Intent(getApplicationContext(), PushingPost.class);
+                Intent it = new Intent(getApplicationContext(), PushingPostActivity.class);
                 startActivity(it);
                 overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out);
             }

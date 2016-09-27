@@ -1,4 +1,4 @@
-package poly.fall16.pro2051.group8.raovat.Fragments;
+package poly.fall16.pro2051.group8.raovat.fragments;
 
 
 import android.content.Intent;
@@ -12,9 +12,9 @@ import android.widget.GridView;
 
 import java.util.ArrayList;
 
-import poly.fall16.pro2051.group8.raovat.Activities.PostListActivity;
-import poly.fall16.pro2051.group8.raovat.Adapters.CategoryAdapter;
-import poly.fall16.pro2051.group8.raovat.Objects.CategoryObject;
+import poly.fall16.pro2051.group8.raovat.activities.PostListActivity;
+import poly.fall16.pro2051.group8.raovat.adapters.CategoryAdapter;
+import poly.fall16.pro2051.group8.raovat.objects.CategoryObject;
 import poly.fall16.pro2051.group8.raovat.R;
 
 /**

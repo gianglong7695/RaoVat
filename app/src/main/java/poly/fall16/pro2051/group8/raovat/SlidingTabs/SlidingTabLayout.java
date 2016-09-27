@@ -1,4 +1,4 @@
-package poly.fall16.pro2051.group8.raovat.SlidingTabs;
+package poly.fall16.pro2051.group8.raovat.slidingtabs;
 
 /**
  * Created by giang on 5/4/2016.

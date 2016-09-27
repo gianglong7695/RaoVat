@@ -1,4 +1,4 @@
-package poly.fall16.pro2051.group8.raovat.Activities;
+package poly.fall16.pro2051.group8.raovat.activities;
 
 import android.graphics.Typeface;
 import android.os.Bundle;

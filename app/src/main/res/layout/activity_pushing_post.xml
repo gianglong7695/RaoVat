@@ -8,7 +8,7 @@
     android:background="@color/background"
     android:paddingBottom="10dp"
     android:orientation="vertical"
-    tools:context="poly.fall16.pro2051.group8.raovat.Activities.PushingPost">
+    tools:context="poly.fall16.pro2051.group8.raovat.activities.PushingPostActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -63,7 +63,7 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="30px"
-                android:background="@color/background"
+                android:background="@drawable/custom_border_camera"
                 android:orientation="vertical">
 
                 <ImageView
@@ -136,7 +136,7 @@
                     app:met_primaryColor="@color/indigo_500" />
 
                 <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
-                    android:id="@+id/spState"
+                    android:id="@+id/spStatus"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/pushingPostHint5"
@@ -145,18 +145,35 @@
                     app:met_floatingLabel="highlight"
                     app:met_primaryColor="@color/indigo_500" />
 
-                <com.rengwuxian.materialedittext.MaterialEditText
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/pushingPostHint6"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
-                    android:inputType="number"
-                    android:textCursorDrawable="@drawable/text_cursor_cyan"
-                    app:met_clearButton="true"
-                    app:met_floatingLabel="highlight"
-                    app:met_maxCharacters="200"
-                    app:met_primaryColor="@color/indigo_500" />
+                    android:layout_height="wrap_content">
+                    <com.rengwuxian.materialedittext.MaterialEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/pushingPostHint6"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:inputType="numberDecimal|numberSigned"
+                        android:textCursorDrawable="@drawable/text_cursor_cyan"
+                        app:met_floatingLabel="highlight"
+                        app:met_maxCharacters="200"
+                        android:maxLength="13"
+                        android:digits="0123456789.,"
+                        app:met_primaryColor="@color/indigo_500"
+                        android:id="@+id/etPrice" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="VNĐ"
+                        android:layout_marginRight="13dp"
+                        android:layout_marginEnd="13dp"
+                        android:layout_alignBaseline="@+id/etPrice"
+                        android:layout_alignBottom="@+id/etPrice"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true" />
+                </RelativeLayout>
 
                 <com.rengwuxian.materialedittext.MaterialEditText
                     android:layout_width="match_parent"
