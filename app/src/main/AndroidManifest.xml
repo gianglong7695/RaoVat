@@ -3,8 +3,12 @@
     package="poly.fall16.pro2051.group8.raovat">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
+        android:name=".helper.AppController"
         android:allowBackup="true"
         android:icon="@drawable/icon_app"
         android:label="@string/app_name"
@@ -27,7 +31,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity
             android:name=".activities.SignUpActivity"
@@ -36,10 +39,11 @@
         <activity
             android:name=".activities.PostListActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activities.PostDetailActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+        <activity
+            android:name=".activities.PostDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".activities.SignUpDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

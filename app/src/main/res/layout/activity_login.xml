@@ -36,31 +36,29 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Tài khoản"
+                    android:maxLines="1"
                     app:met_floatingLabel="highlight"
                     app:met_textColor="@color/white"
                     app:met_iconLeft="@drawable/ic_user_50px_white"
                     app:met_iconPadding="0dp"
-                    app:met_minCharacters="5"
-                    app:met_maxCharacters="16"
                     app:met_primaryColor="@color/white"/>
 
                 <com.rengwuxian.materialedittext.MaterialEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Mật khẩu"
+                    android:maxLines="1"
                     android:inputType="textPassword"
                     app:met_floatingLabel="highlight"
                     app:met_textColor="@color/white"
                     app:met_iconLeft="@drawable/ic_lock_50px_white"
                     app:met_iconPadding="0dp"
-                    app:met_minCharacters="5"
-                    app:met_maxCharacters="16"
                     app:met_primaryColor="@color/white"
                     android:id="@+id/etPassword" />
 
                 <Button
                     android:id="@+id/btLogin"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="20dp"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
                     android:layout_width="match_parent"
@@ -142,8 +140,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="10dp">
+                    android:orientation="horizontal">
                     <ImageView
                         android:id="@+id/ivFacebook"
                         android:layout_width="70dp"
@@ -160,6 +157,20 @@
                         android:id="@+id/ivGoogle" />
                 </LinearLayout>
 
+
+                <Button
+                    android:id="@+id/btSkip"
+                    android:layout_marginLeft="80dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginRight="80dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/custom_border_button_transparent"
+                    android:text="Bỏ qua"
+                    android:textColor="@color/white"
+                    android:textAllCaps="false"
+                    android:textSize="19sp"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

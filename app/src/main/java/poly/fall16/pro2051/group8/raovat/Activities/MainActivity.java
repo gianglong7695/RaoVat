@@ -2,6 +2,7 @@ package poly.fall16.pro2051.group8.raovat.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,8 +14,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.HashMap;
 
 import poly.fall16.pro2051.group8.raovat.R;
+import poly.fall16.pro2051.group8.raovat.helper.SQLiteHandler;
+import poly.fall16.pro2051.group8.raovat.helper.SessionManager;
 import poly.fall16.pro2051.group8.raovat.slidingtabs.SlidingTabLayout;
 import poly.fall16.pro2051.group8.raovat.slidingtabs.TabAdapter;
 
@@ -22,13 +29,23 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     SlidingTabLayout mSlidingTabLayout;
     ViewPager mViewPager;
+    private boolean isCloseApp = false;
+    private SQLiteHandler db;
+    private SessionManager session;
+    NavigationView navigationView;
+    View headerLayout;
 
+    TextView tvName, tvMail;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+//        setViews();
+
+        session = new SessionManager(getApplicationContext());
+        db = new SQLiteHandler(getApplicationContext());
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -48,21 +65,32 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        headerLayout = navigationView.getHeaderView(0);
+        if(session.isLoggedIn()){
+            db = new SQLiteHandler(getApplicationContext());
+            HashMap<String, String> user = db.getUserDetails();
+            tvName = (TextView) headerLayout.findViewById(R.id.tvName);
+            tvMail = (TextView) headerLayout.findViewById(R.id.tvMail);
+            tvName.setText(user.get("username"));
+            tvMail.setText(user.get("email")+ "@gmail.com");
+        }
         navigationView.setNavigationItemSelectedListener(this);
+
 
         // SlidingTabs
         mViewPager = (ViewPager) findViewById(R.id.vp_tab);
         mViewPager.setAdapter(new TabAdapter(getSupportFragmentManager(), this));
-
         mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.stl_tab);
         mSlidingTabLayout.setDistributeEvenly(true);
         mSlidingTabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
         mSlidingTabLayout.setSelectedIndicatorColors(getResources().getColor(R.color.white));
-
-
         mSlidingTabLayout.setCustomTabView(R.layout.tab_view, R.id.tv_tab);
         mSlidingTabLayout.setViewPager(mViewPager);
+
+
+
+
     }
 
     @Override
@@ -71,8 +99,27 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            finish();
-            overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+            if(!isCloseApp){
+                Toast.makeText(this, "Ấn back 1 lần nữa để thoát", Toast.LENGTH_SHORT).show();
+                isCloseApp = true;
+                CountDownTimer timer = new CountDownTimer(3000, 1) {
+                    @Override
+                    public void onTick(long l) {
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        isCloseApp = false;
+
+                    }
+                };
+                timer.start();
+            }else{
+                finish();
+                overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+            }
+
         }
 
 
@@ -103,25 +150,49 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
+        switch (item.getItemId()){
+            case R.id.nav_history:
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+                break;
+            case R.id.nav_favorite:
 
-        } else if (id == R.id.nav_slideshow) {
+                break;
+            case R.id.nav_my_post:
 
-        } else if (id == R.id.nav_manage) {
+                break;
+            // Other options
+            case R.id.nav_share:
 
-        } else if (id == R.id.nav_share) {
+                break;
+            case R.id.nav_help:
 
-        } else if (id == R.id.nav_send) {
+                break;
+            case R.id.nav_setting:
 
+                break;
+            case R.id.nav_info_app:
+
+                break;
+            case R.id.nav_logout:
+                session.setLogin(false);
+
+                db.deleteUsers();
+
+                // Launching the login activity
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+                finish();
+                break;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void setViews(){
+        tvName = (TextView) headerLayout.findViewById(R.id.tvName);
+        tvMail = (TextView) headerLayout.findViewById(R.id.tvMail);
     }
 }

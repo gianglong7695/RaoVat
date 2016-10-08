@@ -59,7 +59,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="55dp"
+                android:layout_marginRight="60dp"
                 android:src="@drawable/ic_search_50px_white" />
 
 

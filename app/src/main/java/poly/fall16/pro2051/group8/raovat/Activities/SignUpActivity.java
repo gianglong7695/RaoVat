@@ -1,5 +1,6 @@
 package poly.fall16.pro2051.group8.raovat.activities;
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -7,15 +8,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import poly.fall16.pro2051.group8.raovat.R;
 
 public class SignUpActivity extends AppCompatActivity {
     TextView tvLogo;
     Typeface mTypeface; // Create a font
-    EditText etUser, etPass, etRePass;
+    public static EditText etUser, etPass, etRePass;
     Button btSignUp;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +26,9 @@ public class SignUpActivity extends AppCompatActivity {
 
         mTypeface = Typeface.createFromAsset(getAssets(), "victoria.ttf");
         tvLogo.setTypeface(mTypeface);
+        // Set font default
+        etPass.setTypeface(Typeface.DEFAULT);
+        etRePass.setTypeface(Typeface.DEFAULT);
 
         btSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -36,7 +40,9 @@ public class SignUpActivity extends AppCompatActivity {
                 } else if (etRePass.getText().toString().equals("")) {
                     etRePass.setError("Không được để trống!");
                 }else {
-                    Toast.makeText(SignUpActivity.this, "Oke!!!", Toast.LENGTH_SHORT).show();
+                    Intent it = new Intent(getApplicationContext(), SignUpDetailActivity.class);
+                    startActivity(it);
+                    overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
                 }
             }
         });
@@ -55,4 +61,8 @@ public class SignUpActivity extends AppCompatActivity {
         etPass = (EditText) findViewById(R.id.etPassword);
         etRePass = (EditText) findViewById(R.id.etRePassword);
     }
+
+
+
+
 }

@@ -9,16 +9,31 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.google.gson.Gson;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 import poly.fall16.pro2051.group8.raovat.R;
 import poly.fall16.pro2051.group8.raovat.adapters.PostAdapter;
+import poly.fall16.pro2051.group8.raovat.fragments.CategoryFragment;
+import poly.fall16.pro2051.group8.raovat.networks.MySingleton;
+import poly.fall16.pro2051.group8.raovat.objects.CategoryObject;
+import poly.fall16.pro2051.group8.raovat.objects.CityObject;
 import poly.fall16.pro2051.group8.raovat.objects.PostObject;
+import poly.fall16.pro2051.group8.raovat.utils.MyString;
 import poly.fall16.pro2051.group8.raovat.utils.RecyclerItemClickListener;
 import poly.fall16.pro2051.group8.raovat.utils.SimpleDividerItemDecoration;
 
@@ -27,8 +42,10 @@ public class PostListActivity extends AppCompatActivity implements SwipeRefreshL
     ArrayList<PostObject> alPost;
     SwipeRefreshLayout swipeRefreshLayout;
     Spinner spCity, spCategory;
-    public static String [] arrCity = {"-- Khu vực --", "Hà nội", "Đà nẵng", "TP.HCM", "Vũng Tàu", "Vinh", "Sóc Trăng", "Kiên Giang", "Bình Định", "Cần Thơ", "Nha Trang", "Vĩnh Phúc", "Phú Thọ", "Huế", "Nam Định", "Hải Dương", "Hòa Bình"};
-    public static String [] arrCategory = {"Xe cộ", "Đồ dùng cá nhân", "Khác"};
+    ArrayList arrCity;
+    ArrayList arrCategoryTitle;
+
+    ArrayAdapter adapterCity;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,13 +95,81 @@ public class PostListActivity extends AppCompatActivity implements SwipeRefreshL
         }));
 
 
-        ArrayAdapter adapterCity = new ArrayAdapter(this, android.R.layout.simple_spinner_item, arrCity);
-        adapterCity.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spCity.setAdapter(adapterCity);
 
-        ArrayAdapter adapterCategory = new ArrayAdapter(this, android.R.layout.simple_spinner_item, arrCategory);
+        arrCategoryTitle = getCategoryTitle();
+        ArrayAdapter adapterCategory = new ArrayAdapter(this, android.R.layout.simple_spinner_item, arrCategoryTitle);
         adapterCategory.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spCategory.setAdapter(adapterCategory);
+
+        arrCity = new ArrayList();
+        adapterCity = new ArrayAdapter<>(this,
+                android.R.layout.simple_dropdown_item_1line, arrCity);
+        spCity.setAdapter(adapterCity);
+
+
+        // API handling network
+        StringRequest request = new StringRequest(MyString.URL_CITY, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    Gson gson = new Gson();
+                    JSONObject jsonObject = new JSONObject(response);
+                    JSONArray jsonArray = jsonObject.getJSONArray("data");
+                    for (int i = 0; i < jsonArray.length(); i++){
+                        String str = jsonArray.getString(i);
+
+                        // Define Response class to correspond to the JSON response returned
+                        CityObject city = gson.fromJson(str, CityObject.class);
+                        arrCity.add(city.name);
+                    }
+
+                    adapterCity.notifyDataSetChanged();
+
+
+
+                } catch (JSONException e) {
+                    Log.e("JSONException", e.toString());
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("VolleyError", error.toString());
+            }
+        });
+
+        StringRequest requestProducts = new StringRequest(MyString.URL_PRODUCTS, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    Gson gson = new Gson();
+                    JSONObject jsonObject = new JSONObject(response);
+                    JSONArray jsonArray = jsonObject.getJSONArray("data");
+                    for (int i = 0; i < jsonArray.length(); i++){
+                        String str = jsonArray.getString(i);
+
+                        // Define Response class to correspond to the JSON response returned
+                        CityObject city = gson.fromJson(str, CityObject.class);
+                        arrCity.add(city.name);
+                    }
+
+                    adapterCity.notifyDataSetChanged();
+
+
+
+                } catch (JSONException e) {
+                    Log.e("JSONException", e.toString());
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("VolleyError", error.toString());
+            }
+        });
+        MySingleton.getInstance(this).addToRequestQueue(request);
+        MySingleton.getInstance(this).addToRequestQueue(requestProducts);
 
 
     }
@@ -119,5 +204,15 @@ public class PostListActivity extends AppCompatActivity implements SwipeRefreshL
             }
         };
         timer.start();
+    }
+
+    public ArrayList getCategoryTitle(){
+        ArrayList arrCategory = new ArrayList();
+        ArrayList<CategoryObject> list = CategoryFragment.list;
+        for (int i = 0; i < list.size(); i++){
+            arrCategory.add(list.get(i).getTitle());
+        }
+
+        return  arrCategory;
     }
 }

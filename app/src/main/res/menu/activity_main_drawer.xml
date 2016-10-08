@@ -3,21 +3,21 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
+            android:id="@+id/nav_history"
             android:icon="@drawable/ic_book_50px_white"
             android:title="Lịch sử giao dịch" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/nav_favorite"
             android:icon="@drawable/ic_heart_50px_white"
             android:title="Tin rao vặt ưa thích" />
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/nav_my_post"
             android:icon="@drawable/ic_circleup_50px_white"
             android:title="Bạn đã đăng" />
 
     </group>
 
-    <item android:title="Khác">
+    <item android:title="Tùy chọn khác">
         <menu>
             <item
                 android:id="@+id/nav_share"
@@ -28,13 +28,17 @@
                 android:icon="@drawable/ic_help_50px_white"
                 android:title="Trợ giúp" />
             <item
-                android:id="@+id/nav_manage"
+                android:id="@+id/nav_setting"
                 android:icon="@drawable/ic_setting_50px_white"
                 android:title="Cài đặt" />
             <item
-                android:id="@+id/nav_send"
+                android:id="@+id/nav_info_app"
                 android:icon="@drawable/ic_info_50px_white"
                 android:title="Thông tin ứng dụng" />
+            <item
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/ic_logout_50px_white"
+                android:title="Đăng xuất" />
         </menu>
     </item>
 

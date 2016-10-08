@@ -95,7 +95,7 @@ public class PushingPostActivity extends AppCompatActivity {
 
 
                     for (int j = 0; j < alCity.size(); j++){
-                        arrCity.add(alCity.get(j).getName());
+                        arrCity.add(alCity.get(j).name);
                     }
                     adapterCity.notifyDataSetChanged();
 
@@ -109,6 +109,7 @@ public class PushingPostActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(PushingPostActivity.this, "Có lỗi xảy ra!", Toast.LENGTH_SHORT).show();
+                Log.e("VolleyError", error.toString());
             }
         });
         MySingleton.getInstance(this).addToRequestQueue(request);

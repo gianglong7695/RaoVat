@@ -12,10 +12,10 @@ import android.widget.GridView;
 
 import java.util.ArrayList;
 
+import poly.fall16.pro2051.group8.raovat.R;
 import poly.fall16.pro2051.group8.raovat.activities.PostListActivity;
 import poly.fall16.pro2051.group8.raovat.adapters.CategoryAdapter;
 import poly.fall16.pro2051.group8.raovat.objects.CategoryObject;
-import poly.fall16.pro2051.group8.raovat.R;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,7 +23,7 @@ import poly.fall16.pro2051.group8.raovat.R;
 public class CategoryFragment extends Fragment {
     GridView gvCategory;
     View v;
-    ArrayList<CategoryObject> list;
+    public static ArrayList<CategoryObject> list;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -32,15 +32,13 @@ public class CategoryFragment extends Fragment {
         setViews();
         list = new ArrayList<>();
         list.add(new CategoryObject("Xe cộ", R.drawable.img_xeco));
-        list.add(new CategoryObject("Xe cộ", R.drawable.img_xeco));
-        list.add(new CategoryObject("Xe cộ", R.drawable.img_xeco));
-        list.add(new CategoryObject("Xe cộ", R.drawable.img_xeco));
-        list.add(new CategoryObject("Xe cộ", R.drawable.img_xeco));
-        list.add(new CategoryObject("Xe cộ", R.drawable.img_xeco));
-        list.add(new CategoryObject("Xe cộ", R.drawable.img_xeco));
-        list.add(new CategoryObject("Xe cộ", R.drawable.img_xeco));
-        list.add(new CategoryObject("Xe cộ", R.drawable.img_xeco));
-        list.add(new CategoryObject("Xe cộ", R.drawable.img_xeco));
+        list.add(new CategoryObject("Đồ điện tử", R.drawable.img_xeco));
+        list.add(new CategoryObject("Đồ dùng văn phòng", R.drawable.img_xeco));
+        list.add(new CategoryObject("Đồ gia dụng", R.drawable.img_xeco));
+        list.add(new CategoryObject("Quần áo, giày dép", R.drawable.img_xeco));
+        list.add(new CategoryObject("Khác", R.drawable.img_xeco));
+        list.add(new CategoryObject("Tất cả danh mục", R.drawable.img_xeco));
+
 
         CategoryAdapter adapter = new CategoryAdapter(getActivity(), list);
         gvCategory.setAdapter(adapter);
@@ -49,17 +47,17 @@ public class CategoryFragment extends Fragment {
         gvCategory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                switch (i){
-                    case 0:
-                        {
-                            Intent it = new Intent(getActivity(), PostListActivity.class);
-                            startActivity(it);
-                            getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+            switch (i){
+                case 0:
+                    {
+                        Intent it = new Intent(getActivity(), PostListActivity.class);
+                        startActivity(it);
+                        getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 
-                        }
-                        break;
+                    }
+                    break;
 
-                }
+            }
             }
         });
 
