@@ -33,6 +33,7 @@ import poly.fall16.pro2051.group8.raovat.networks.MySingleton;
 import poly.fall16.pro2051.group8.raovat.objects.CategoryObject;
 import poly.fall16.pro2051.group8.raovat.objects.CityObject;
 import poly.fall16.pro2051.group8.raovat.objects.PostObject;
+import poly.fall16.pro2051.group8.raovat.objects.ProductObject;
 import poly.fall16.pro2051.group8.raovat.utils.MyString;
 import poly.fall16.pro2051.group8.raovat.utils.RecyclerItemClickListener;
 import poly.fall16.pro2051.group8.raovat.utils.SimpleDividerItemDecoration;
@@ -44,8 +45,10 @@ public class PostListActivity extends AppCompatActivity implements SwipeRefreshL
     Spinner spCity, spCategory;
     ArrayList arrCity;
     ArrayList arrCategoryTitle;
+    ArrayList<ProductObject> alProduct;
 
     ArrayAdapter adapterCity;
+    PostAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,18 +59,18 @@ public class PostListActivity extends AppCompatActivity implements SwipeRefreshL
         swipeRefreshLayout.setColorSchemeColors(Color.RED, Color.GREEN, Color.BLUE, Color.CYAN);
 
         alPost = new ArrayList<>();
-        alPost.add(new PostObject("Nhà dương nội - Hà đông, 60m2 chính chủ", "2.500.000 đ/tháng", "23/9/2016", "http://3.bp.blogspot.com/-Ue1BNDfjTwE/UPFybkYOckI/AAAAAAAACB0/SfkwREI3KHM/s640/A-Beautiful-Path-Villaviciosa-Asturias-Spain-700x525.jpg"));
-        alPost.add(new PostObject("Nhà dương nội - Hà đông, 60m2 chính chủ", "2.500.000 đ/tháng", "23/9/2016", "http://diendanso.net/wp-content/uploads/2015/12/anh-dep-17.jpg"));
-        alPost.add(new PostObject("Nhà dương nội - Hà đông, 60m2 chính chủ", "2.500.000 đ/tháng", "23/9/2016", "http://3.bp.blogspot.com/-Ue1BNDfjTwE/UPFybkYOckI/AAAAAAAACB0/SfkwREI3KHM/s640/A-Beautiful-Path-Villaviciosa-Asturias-Spain-700x525.jpg"));
-        alPost.add(new PostObject("Nhà dương nội - Hà đông, 60m2 chính chủ", "2.500.000 đ/tháng", "23/9/2016", "http://diendanso.net/wp-content/uploads/2015/12/anh-dep-17.jpg"));
-        alPost.add(new PostObject("Nhà dương nội - Hà đông, 60m2 chính chủ", "2.500.000 đ/tháng", "23/9/2016", "http://3.bp.blogspot.com/-Ue1BNDfjTwE/UPFybkYOckI/AAAAAAAACB0/SfkwREI3KHM/s640/A-Beautiful-Path-Villaviciosa-Asturias-Spain-700x525.jpg"));
-        alPost.add(new PostObject("Nhà dương nội - Hà đông, 60m2 chính chủ", "2.500.000 đ/tháng", "23/9/2016", "http://diendanso.net/wp-content/uploads/2015/12/anh-dep-17.jpg"));
-        alPost.add(new PostObject("Nhà dương nội - Hà đông, 60m2 chính chủ", "2.500.000 đ/tháng", "23/9/2016", "http://3.bp.blogspot.com/-Ue1BNDfjTwE/UPFybkYOckI/AAAAAAAACB0/SfkwREI3KHM/s640/A-Beautiful-Path-Villaviciosa-Asturias-Spain-700x525.jpg"));
-        alPost.add(new PostObject("Nhà dương nội - Hà đông, 60m2 chính chủ", "2.500.000 đ/tháng", "23/9/2016", "http://diendanso.net/wp-content/uploads/2015/12/anh-dep-17.jpg"));
-        alPost.add(new PostObject("Nhà dương nội - Hà đông, 60m2 chính chủ", "2.500.000 đ/tháng", "23/9/2016", "http://3.bp.blogspot.com/-Ue1BNDfjTwE/UPFybkYOckI/AAAAAAAACB0/SfkwREI3KHM/s640/A-Beautiful-Path-Villaviciosa-Asturias-Spain-700x525.jpg"));
-        alPost.add(new PostObject("Nhà dương nội - Hà đông, 60m2 chính chủ", "2.500.000 đ/tháng", "23/9/2016", "http://diendanso.net/wp-content/uploads/2015/12/anh-dep-17.jpg"));
+//        alPost.add(new PostObject("Nhà dương nội - Hà đông, 60m2 chính chủ", "2.500.000 đ/tháng", "23/9/2016", "http://3.bp.blogspot.com/-Ue1BNDfjTwE/UPFybkYOckI/AAAAAAAACB0/SfkwREI3KHM/s640/A-Beautiful-Path-Villaviciosa-Asturias-Spain-700x525.jpg"));
+//        alPost.add(new PostObject("Nhà dương nội - Hà đông, 60m2 chính chủ", "2.500.000 đ/tháng", "23/9/2016", "http://diendanso.net/wp-content/uploads/2015/12/anh-dep-17.jpg"));
+//        alPost.add(new PostObject("Nhà dương nội - Hà đông, 60m2 chính chủ", "2.500.000 đ/tháng", "23/9/2016", "http://3.bp.blogspot.com/-Ue1BNDfjTwE/UPFybkYOckI/AAAAAAAACB0/SfkwREI3KHM/s640/A-Beautiful-Path-Villaviciosa-Asturias-Spain-700x525.jpg"));
+//        alPost.add(new PostObject("Nhà dương nội - Hà đông, 60m2 chính chủ", "2.500.000 đ/tháng", "23/9/2016", "http://diendanso.net/wp-content/uploads/2015/12/anh-dep-17.jpg"));
+//        alPost.add(new PostObject("Nhà dương nội - Hà đông, 60m2 chính chủ", "2.500.000 đ/tháng", "23/9/2016", "http://3.bp.blogspot.com/-Ue1BNDfjTwE/UPFybkYOckI/AAAAAAAACB0/SfkwREI3KHM/s640/A-Beautiful-Path-Villaviciosa-Asturias-Spain-700x525.jpg"));
+//        alPost.add(new PostObject("Nhà dương nội - Hà đông, 60m2 chính chủ", "2.500.000 đ/tháng", "23/9/2016", "http://diendanso.net/wp-content/uploads/2015/12/anh-dep-17.jpg"));
+//        alPost.add(new PostObject("Nhà dương nội - Hà đông, 60m2 chính chủ", "2.500.000 đ/tháng", "23/9/2016", "http://3.bp.blogspot.com/-Ue1BNDfjTwE/UPFybkYOckI/AAAAAAAACB0/SfkwREI3KHM/s640/A-Beautiful-Path-Villaviciosa-Asturias-Spain-700x525.jpg"));
+//        alPost.add(new PostObject("Nhà dương nội - Hà đông, 60m2 chính chủ", "2.500.000 đ/tháng", "23/9/2016", "http://diendanso.net/wp-content/uploads/2015/12/anh-dep-17.jpg"));
+//        alPost.add(new PostObject("Nhà dương nội - Hà đông, 60m2 chính chủ", "2.500.000 đ/tháng", "23/9/2016", "http://3.bp.blogspot.com/-Ue1BNDfjTwE/UPFybkYOckI/AAAAAAAACB0/SfkwREI3KHM/s640/A-Beautiful-Path-Villaviciosa-Asturias-Spain-700x525.jpg"));
+//        alPost.add(new PostObject("Nhà dương nội - Hà đông, 60m2 chính chủ", "2.500.000 đ/tháng", "23/9/2016", "http://diendanso.net/wp-content/uploads/2015/12/anh-dep-17.jpg"));
 
-        PostAdapter adapter = new PostAdapter(alPost);
+        adapter = new PostAdapter(alPost);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         rvPost.setLayoutManager(mLayoutManager);
         rvPost.setItemAnimator(new DefaultItemAnimator());
@@ -107,6 +110,7 @@ public class PostListActivity extends AppCompatActivity implements SwipeRefreshL
         spCity.setAdapter(adapterCity);
 
 
+
         // API handling network
         StringRequest request = new StringRequest(MyString.URL_CITY, new Response.Listener<String>() {
             @Override
@@ -138,23 +142,24 @@ public class PostListActivity extends AppCompatActivity implements SwipeRefreshL
             }
         });
 
+        alProduct = new ArrayList<>();
         StringRequest requestProducts = new StringRequest(MyString.URL_PRODUCTS, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
                     Gson gson = new Gson();
                     JSONObject jsonObject = new JSONObject(response);
-                    JSONArray jsonArray = jsonObject.getJSONArray("data");
+                    JSONArray jsonArray = jsonObject.getJSONArray("product");
                     for (int i = 0; i < jsonArray.length(); i++){
                         String str = jsonArray.getString(i);
 
                         // Define Response class to correspond to the JSON response returned
-                        CityObject city = gson.fromJson(str, CityObject.class);
-                        arrCity.add(city.name);
+                        ProductObject productObject = gson.fromJson(str, ProductObject.class);
+                        alProduct.add(productObject);
+                        alPost.add(new PostObject(productObject.name, productObject.price, "Hôm nay", productObject.image_url));
                     }
 
-                    adapterCity.notifyDataSetChanged();
-
+                    adapter.notifyDataSetChanged();
 
 
                 } catch (JSONException e) {
