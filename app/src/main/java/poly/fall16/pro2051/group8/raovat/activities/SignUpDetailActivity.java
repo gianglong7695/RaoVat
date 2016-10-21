@@ -1,12 +1,17 @@
 package poly.fall16.pro2051.group8.raovat.activities;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -15,6 +20,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -23,6 +29,7 @@ import com.android.volley.toolbox.StringRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,6 +44,7 @@ public class SignUpDetailActivity extends AppCompatActivity {
     Dialog mDialog;
     LinearLayout layout_avatar;
     CircleImageView ivAvatar;
+    String encodedImage = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,9 +104,9 @@ public class SignUpDetailActivity extends AppCompatActivity {
         showDialog();
 
         String OLD_URL = "http://demophp2.esy.es/user.php";
-        String URL = "http://demophp2.esy.es/user.php?action=register&&txtEmail=" + email + "&&txtPassword=" + password + "&&txtUsername=" + username + "&&txtPhone=" + phone + "&&txtFullName=" + fullname;
+        String URL = "http://demophp2.esy.es/user.php?action=register&&txtEmail=" + email + "&&txtPassword=" + password + "&&txtUsername=" + username + "&&txtPhone=" + phone + "&&txtFullName=" + fullname + "&&txtImage=" + encodedImage;
         StringRequest strReq = new StringRequest(Request.Method.POST,
-                URL , new Response.Listener<String>() {
+                OLD_URL , new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
@@ -147,13 +155,16 @@ public class SignUpDetailActivity extends AppCompatActivity {
                 params.put("txtUsername",username);
                 params.put("txtPhone",phone);
                 params.put("txtFullName",fullname);
+                params.put("txtImage", encodedImage);
                 params.put("action","register");
+
                 return params;
             }
 
         };
 
         // Adding request to request queue
+        strReq.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
 
 
@@ -181,6 +192,42 @@ public class SignUpDetailActivity extends AppCompatActivity {
         if(requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null){
             Uri selectImg = data.getData();
             ivAvatar.setImageURI(selectImg);
+//            encodedImage = Base64.encodeToString(decodeImageToArray(getRealPathFromURI(getApplicationContext(),selectImg)), Base64.DEFAULT);
+            encodedImage = getStringImage(getRealPathFromURI(getApplicationContext(), selectImg));
+
         }
+    }
+
+    public byte[] decodeImageToArray(String path){
+        Bitmap bm = BitmapFactory.decodeFile(path);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
+        byte[] b = baos.toByteArray();
+
+        return b;
+    }
+
+    public String getRealPathFromURI(Context context, Uri contentUri) {
+        Cursor cursor = null;
+        try {
+            String[] proj = { MediaStore.Images.Media.DATA };
+            cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+
+    public String getStringImage(String path){
+        Bitmap bmp = BitmapFactory.decodeFile(path);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+        byte[] imageBytes = baos.toByteArray();
+        String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+        return encodedImage;
     }
 }

@@ -9,11 +9,22 @@
     android:padding="10dp"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/imageView"
+    <RelativeLayout
         android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:src="@drawable/avatar_dg" />
+        android:layout_height="75dp">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/ivAvatar"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:src="@drawable/avatar_dg" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"/>
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/tvName"

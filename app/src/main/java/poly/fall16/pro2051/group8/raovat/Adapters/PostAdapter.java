@@ -110,4 +110,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             progressBar = (CircularProgressView) itemView.findViewById(R.id.progressBar);
         }
     }
+
+
 }

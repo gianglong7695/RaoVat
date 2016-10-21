@@ -14,6 +14,7 @@
     <color name="bg2">#f4f4f4</color>
     <color name="grayLine">#cacaca</color>
 
+    <!-- Basic colors -->
     <color name="white">#FFF</color>
     <color name="white2">#dfd4d4</color>
     <color name="redMoney">#d34045</color>
@@ -23,4 +24,16 @@
     <color name="cyan_500">#00bcd4</color>
     <color name="colorLink">#1a0dab</color>
     <color name="gray1">#717171</color>
+    <color name="gray">#cccccc</color>
+    <color name="teal">#009688</color>
+    <color name="redBrown">#d23c19</color>
+    <color name="violet">#a744b9</color>
+    <color name="green">#1b7519</color>
+
+    <!-- My colors -->
+    <color name="navigationButtonSelected">#4553a3</color>
+    <color name="backgroundDefault">#f5f4f9</color>
+    <color name="searchTextColor">#616161</color>
+    <color name="defaultColor">#424242</color>
+    <color name="priceColor">#eb8a34</color>
 </resources>

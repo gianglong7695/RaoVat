@@ -35,6 +35,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 	private static final String KEY_FULLNAME = "fullname";
 	private static final String KEY_PHONE = "phone";
 	private static final String KEY_UID = "uid";
+	private static final String KEY_AVATAR = "profile_url";
 
 
 	public SQLiteHandler(Context context) {
@@ -46,7 +47,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase db) {
 		String CREATE_LOGIN_TABLE = "CREATE TABLE " + TABLE_USER + "("
 				+ KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT,"
-				+ KEY_EMAIL + " TEXT UNIQUE," + KEY_FULLNAME + " TEXT," + KEY_PHONE + " TEXT," + KEY_UID + " TEXT " +   ")";
+				+ KEY_EMAIL + " TEXT UNIQUE," + KEY_FULLNAME + " TEXT," + KEY_PHONE + " TEXT," + KEY_UID + " TEXT, " + KEY_AVATAR + " TEXT " +   ")";
 		db.execSQL(CREATE_LOGIN_TABLE);
 
 		Log.d(TAG, "Database tables created");
@@ -65,7 +66,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 	/**
 	 * Storing user details in database
 	 * */
-	public void addUser(String name, String email, String fullName, String phone , String uid) {
+	public void addUser(String name, String email, String fullName, String phone , String uid, String profile_url) {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
@@ -73,8 +74,10 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 		values.put(KEY_EMAIL, email); // Email
 		values.put(KEY_FULLNAME, fullName);
 		values.put(KEY_PHONE, phone);
-
+		values.put(KEY_AVATAR, profile_url);
 		values.put(KEY_UID, uid); // Email
+		values.put(KEY_AVATAR, profile_url); // profile_url
+
 		 // Created At
 
 		// Inserting Row
@@ -99,6 +102,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 			user.put("username", cursor.getString(1));
 			user.put("email", cursor.getString(2));
 			user.put("uid", cursor.getString(3));
+			user.put(KEY_AVATAR, cursor.getString(6));
 		}
 		cursor.close();
 		db.close();

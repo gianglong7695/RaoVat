@@ -1,9 +1,18 @@
 package poly.fall16.pro2051.group8.raovat.activities;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -20,9 +29,13 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import poly.fall16.pro2051.group8.raovat.R;
+import poly.fall16.pro2051.group8.raovat.adapters.ImageSelectAdapter;
 import poly.fall16.pro2051.group8.raovat.networks.MySingleton;
 import poly.fall16.pro2051.group8.raovat.objects.CityObject;
+import poly.fall16.pro2051.group8.raovat.objects.ImageObject;
 import poly.fall16.pro2051.group8.raovat.utils.MyString;
+
+import static poly.fall16.pro2051.group8.raovat.activities.SignUpDetailActivity.RESULT_LOAD_IMAGE;
 
 public class PushingPostActivity extends AppCompatActivity {
     MaterialBetterSpinner spCategory, spArea, spStatus;
@@ -32,6 +45,12 @@ public class PushingPostActivity extends AppCompatActivity {
     ArrayList arrCity;
     ArrayList<CityObject> alCity;
     ArrayAdapter<String> adapterCity;
+    RelativeLayout layoutPushImg;
+    ArrayList<ImageObject> alImage;
+    ImageSelectAdapter imageSelectAdapter;
+    RecyclerView rvImageSelecter;
+    public static LinearLayout largeSelect, addPictureView;
+    ImageView ivBackButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +59,7 @@ public class PushingPostActivity extends AppCompatActivity {
 
         alCity = new ArrayList<>();
         arrCity = new ArrayList();
+        alImage = new ArrayList<>();
 
         // Handling Spinner
         ArrayAdapter<String> adapterCategory = new ArrayAdapter<String>(this,
@@ -74,7 +94,42 @@ public class PushingPostActivity extends AppCompatActivity {
 //            }
 //        });
 
+        imageSelectAdapter = new ImageSelectAdapter(alImage, getApplicationContext());
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.HORIZONTAL, false);
+        rvImageSelecter.setLayoutManager(mLayoutManager);
+        rvImageSelecter.setItemAnimator(new DefaultItemAnimator());
+        rvImageSelecter.setAdapter(imageSelectAdapter);
 
+
+
+        largeSelect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent,"Select Picture"), 1);
+            }
+        });
+
+        addPictureView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent,"Select Picture"), 1);
+            }
+        });
+
+        ivBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
 
 
         // API handling network
@@ -122,6 +177,12 @@ public class PushingPostActivity extends AppCompatActivity {
         spArea = (MaterialBetterSpinner) findViewById(R.id.spArea);
         spStatus = (MaterialBetterSpinner) findViewById(R.id.spStatus);
         etPrice = (MaterialEditText) findViewById(R.id.etPrice);
+        layoutPushImg = (RelativeLayout) findViewById(R.id.layoutPushImg);
+        rvImageSelecter = (RecyclerView) findViewById(R.id.rvImgItems);
+        largeSelect = (LinearLayout) findViewById(R.id.largeSelect);
+        addPictureView = (LinearLayout)findViewById(R.id.addPictureView);
+        addPictureView.setVisibility(View.GONE);
+        ivBackButton = (ImageView) findViewById(R.id.ivBackButton);
     }
 
     @Override
@@ -129,5 +190,22 @@ public class PushingPostActivity extends AppCompatActivity {
         finish();
         overridePendingTransition(R.anim.push_down_in, R.anim.push_down_out);
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null){
+            Uri selectImg = data.getData();
+            alImage.add(new ImageObject(selectImg));
+            imageSelectAdapter.notifyDataSetChanged();
+            if(alImage.size() > 0){
+                largeSelect.setVisibility(View.GONE);
+                addPictureView.setVisibility(View.VISIBLE);
+            }else{
+                addPictureView.setVisibility(View.GONE);
+            }
+        }
+    }
+
 
 }
