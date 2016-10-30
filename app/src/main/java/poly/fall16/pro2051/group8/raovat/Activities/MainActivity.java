@@ -7,16 +7,20 @@ import android.os.CountDownTimer;
 import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,7 +42,7 @@ import poly.fall16.pro2051.group8.raovat.slidingtabs.SlidingTabLayout;
 import poly.fall16.pro2051.group8.raovat.slidingtabs.TabAdapter;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener{
     SlidingTabLayout mSlidingTabLayout;
     ViewPager mViewPager;
     private boolean isCloseApp = false;
@@ -46,20 +50,22 @@ public class MainActivity extends AppCompatActivity
     private SessionManager session;
     NavigationView navigationView;
     View headerLayout;
+    SearchView searchView;
 
-    TextView tvName, tvMail;
+    public static TextView tvName, tvMail;
     ImageView ivAvatar;
 
     ImageLoader imageLoader;
     DisplayImageOptions options;
     ProgressBar progressBar;
+    LinearLayout content_main;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-//        setViews();
+        setViews();
 
         session = new SessionManager(getApplicationContext());
         db = new SQLiteHandler(getApplicationContext());
@@ -68,13 +74,13 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
                 Intent it = new Intent(getApplicationContext(), PushingPostActivity.class);
                 startActivity(it);
                 overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out);
             }
         });
+
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -84,6 +90,16 @@ public class MainActivity extends AppCompatActivity
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         headerLayout = navigationView.getHeaderView(0);
+
+        headerLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent it = new Intent(getApplicationContext(), ProfileActivity.class);
+                startActivity(it);
+                overridePendingTransition(R.anim.shrink_and_rotate_b, R.anim.shrink_and_rotate_a);
+            }
+        });
+
         if(session.isLoggedIn()){
             db = new SQLiteHandler(getApplicationContext());
             HashMap<String, String> user = db.getUserDetails();
@@ -91,8 +107,8 @@ public class MainActivity extends AppCompatActivity
             tvMail = (TextView) headerLayout.findViewById(R.id.tvMail);
             ivAvatar = (ImageView) headerLayout.findViewById(R.id.ivAvatar);
             progressBar = (ProgressBar) headerLayout.findViewById(R.id.progressBar);
-            tvName.setText(user.get("username"));
-            tvMail.setText(user.get("email"));
+            tvName.setText(user.get(SQLiteHandler.KEY_NAME));
+            tvMail.setText(user.get(SQLiteHandler.KEY_EMAIL));
             setUpImageLoader();
             imageLoader.displayImage(user.get("profile_url"), ivAvatar, options, new ImageLoadingListener() {
                 @Override
@@ -128,6 +144,8 @@ public class MainActivity extends AppCompatActivity
         mSlidingTabLayout.setSelectedIndicatorColors(getResources().getColor(R.color.white));
         mSlidingTabLayout.setCustomTabView(R.layout.tab_view, R.id.tv_tab);
         mSlidingTabLayout.setViewPager(mViewPager);
+
+        Snackbar.make(content_main, "Chào mừng trở lại!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
 
     }
 
@@ -167,6 +185,14 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        MenuItem itemSearch = menu.findItem(R.id.action_search);
+        searchView = (SearchView) itemSearch.getActionView();
+        EditText searchEditText = (EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        searchEditText.setTextColor(getResources().getColor(R.color.teal));
+        searchEditText.setBackgroundColor(getResources().getColor(R.color.white));
+        searchEditText.setHintTextColor(getResources().getColor(R.color.teal));
+        //set OnQueryTextListener cho search view để thực hiện search theo text
+        searchView.setOnQueryTextListener(this);
         return true;
     }
 
@@ -209,7 +235,11 @@ public class MainActivity extends AppCompatActivity
 
                 break;
             case R.id.nav_info_app:
-
+            {
+                Intent intent = new Intent(MainActivity.this, InfomationActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out);
+            }
                 break;
             case R.id.nav_logout:
                 session.setLogin(false);
@@ -230,9 +260,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void setViews(){
-        tvName = (TextView) headerLayout.findViewById(R.id.tvName);
-        tvMail = (TextView) headerLayout.findViewById(R.id.tvMail);
-        ivAvatar = (ImageView) headerLayout.findViewById(R.id.ivAvatar);
+        content_main = (LinearLayout) findViewById(R.id.content_main);
     }
 
     public void setUpImageLoader(){
@@ -253,5 +281,16 @@ public class MainActivity extends AppCompatActivity
                 .considerExifParams(true)
                 .displayer(new FadeInBitmapDisplayer(300))
                 .build();
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        Toast.makeText(this, "Chức năng đang được xây dựng!", Toast.LENGTH_SHORT).show();
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
     }
 }

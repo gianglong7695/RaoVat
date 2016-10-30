@@ -1,5 +1,6 @@
 package poly.fall16.pro2051.group8.raovat.activities;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -30,6 +31,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,15 +42,19 @@ import poly.fall16.pro2051.group8.raovat.helper.AppController;
 public class SignUpDetailActivity extends AppCompatActivity {
     public static final int RESULT_LOAD_IMAGE = 1;
     Button btBack, btFinish;
-    EditText etName, etPhone, etMail;
+    EditText etName, etPhone, etMail, etAddress;
     Dialog mDialog;
     LinearLayout layout_avatar;
     CircleImageView ivAvatar;
     String encodedImage = "";
+    boolean isSignIn = true;
+    public static Activity mActivity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up_detail);
+        mActivity = this;
         setViews();
         setDialog();
 
@@ -68,7 +74,12 @@ public class SignUpDetailActivity extends AppCompatActivity {
                 String name = etName.getText().toString();
                 String phone = etPhone.getText().toString();
                 String mail = etMail.getText().toString();
-                checkReg(userName, name, mail, phone, password);
+                String address = etAddress.getText().toString();
+
+                if(isSignIn){
+                    checkReg(userName, name, mail, phone, password, address);
+                }
+
             }
         });
 
@@ -94,23 +105,22 @@ public class SignUpDetailActivity extends AppCompatActivity {
         etName = (EditText) findViewById(R.id.etName);
         etMail = (EditText) findViewById(R.id.etEmail);
         etPhone = (EditText) findViewById(R.id.etPhone);
+        etAddress = (EditText) findViewById(R.id.etAddress);
         layout_avatar = (LinearLayout) findViewById(R.id.layout_avatar);
         ivAvatar = (CircleImageView) findViewById(R.id.ivAvatar);
     }
 
-    private void checkReg(final String username,final String fullname,final String email,final String phone, final String password) {
+    private void checkReg(final String username,final String fullname,final String email,final String phone, final String password, final String address) {
         // Tag used to cancel the request
         String tag_string_req = "req_login";
         showDialog();
 
         String OLD_URL = "http://demophp2.esy.es/user.php";
-        String URL = "http://demophp2.esy.es/user.php?action=register&&txtEmail=" + email + "&&txtPassword=" + password + "&&txtUsername=" + username + "&&txtPhone=" + phone + "&&txtFullName=" + fullname + "&&txtImage=" + encodedImage;
         StringRequest strReq = new StringRequest(Request.Method.POST,
                 OLD_URL , new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
-                //Log.d("TAG", "Login Response: " + response.toString());
                 hideDialog();
 
                 try {
@@ -119,9 +129,10 @@ public class SignUpDetailActivity extends AppCompatActivity {
                     Toast.makeText(getBaseContext(),response,Toast.LENGTH_LONG).show();
                     // Check for error node in json
                     if (!error) {
-                        Toast.makeText(SignUpDetailActivity.this, "Register successfully!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SignUpDetailActivity.this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
                         Intent i = new Intent(SignUpDetailActivity.this,LoginActivity.class);
                         startActivity(i);
+                        finish();
                     } else {
                         // Error in login. Get the error message
                         String errorMsg = jObj.getString("error_msg");
@@ -156,8 +167,9 @@ public class SignUpDetailActivity extends AppCompatActivity {
                 params.put("txtPhone",phone);
                 params.put("txtFullName",fullname);
                 params.put("txtImage", encodedImage);
-                params.put("action","register");
+                params.put("txtAddress", address);
 
+                params.put("action","register");
                 return params;
             }
 
@@ -191,9 +203,12 @@ public class SignUpDetailActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null){
             Uri selectImg = data.getData();
-            ivAvatar.setImageURI(selectImg);
-//            encodedImage = Base64.encodeToString(decodeImageToArray(getRealPathFromURI(getApplicationContext(),selectImg)), Base64.DEFAULT);
-            encodedImage = getStringImage(getRealPathFromURI(getApplicationContext(), selectImg));
+            try {
+                ivAvatar.setImageBitmap(decodeUri(getApplicationContext(), selectImg, 100));
+                encodedImage = getStringImage(getRealPathFromURI(getApplicationContext(), selectImg));
+            } catch (FileNotFoundException e) {
+                Log.e("FileNotFoundException", e.toString());
+            }
 
         }
     }
@@ -229,5 +244,28 @@ public class SignUpDetailActivity extends AppCompatActivity {
         byte[] imageBytes = baos.toByteArray();
         String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
         return encodedImage;
+    }
+
+    public static Bitmap decodeUri(Context c, Uri uri, final int requiredSize)
+            throws FileNotFoundException {
+        BitmapFactory.Options o = new BitmapFactory.Options();
+        o.inJustDecodeBounds = true;
+        BitmapFactory.decodeStream(c.getContentResolver().openInputStream(uri), null, o);
+
+        int width_tmp = o.outWidth
+                , height_tmp = o.outHeight;
+        int scale = 1;
+
+        while(true) {
+            if(width_tmp / 2 < requiredSize || height_tmp / 2 < requiredSize)
+                break;
+            width_tmp /= 2;
+            height_tmp /= 2;
+            scale *= 2;
+        }
+
+        BitmapFactory.Options o2 = new BitmapFactory.Options();
+        o2.inSampleSize = scale;
+        return BitmapFactory.decodeStream(c.getContentResolver().openInputStream(uri), null, o2);
     }
 }

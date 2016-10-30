@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.github.rahatarmanahmed.cpv.CircularProgressView;
@@ -99,7 +100,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder{
         TextView title, price, time;
         ImageView image;
-        CircularProgressView progressBar;
+        ProgressBar progressBar;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -107,7 +108,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             price = (TextView) itemView.findViewById(R.id.price);
             time = (TextView) itemView.findViewById(R.id.time);
             image = (ImageView) itemView.findViewById(R.id.image);
-            progressBar = (CircularProgressView) itemView.findViewById(R.id.progressBar);
+            progressBar = (ProgressBar) itemView.findViewById(R.id.progressBar);
         }
     }
 

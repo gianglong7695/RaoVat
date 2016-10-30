@@ -8,9 +8,10 @@ import android.net.Uri;
 
 public class ImageObject {
     public Uri uri;
+    public String baseImage;
 
-
-    public ImageObject(Uri uri) {
+    public ImageObject(Uri uri, String baseImage) {
         this.uri = uri;
+        this.baseImage = baseImage;
     }
 }

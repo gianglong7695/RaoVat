@@ -1,5 +1,6 @@
 package poly.fall16.pro2051.group8.raovat.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -16,13 +17,14 @@ public class SignUpActivity extends AppCompatActivity {
     Typeface mTypeface; // Create a font
     public static EditText etUser, etPass, etRePass;
     Button btSignUp;
-
+    public static Activity mActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         setViews();
+        mActivity = this;
 
         mTypeface = Typeface.createFromAsset(getAssets(), "victoria.ttf");
         tvLogo.setTypeface(mTypeface);

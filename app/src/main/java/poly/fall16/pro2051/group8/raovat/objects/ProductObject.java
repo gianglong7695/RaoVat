@@ -10,4 +10,11 @@ public class ProductObject {
     public String username;
     public String price;
     public String image_url;
+    public String date;
+    public String category;
+    public String description;
+    public String Address;
+    public String quality;
+
+
 }
