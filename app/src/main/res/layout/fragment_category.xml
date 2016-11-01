@@ -1,18 +1,25 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/backgroundDefault"
     tools:context="poly.fall16.pro2051.group8.raovat.fragments.CategoryFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <GridView
-        android:id="@+id/gvCategory"
+    <android.support.v7.widget.RecyclerView
+        android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:columnWidth="10dp"
-        android:numColumns="2"
-        android:gravity="center">
+        android:background="@color/white"
+        android:id="@+id/rvNews">
 
-    </GridView>
+    </android.support.v7.widget.RecyclerView>
 
-</FrameLayout>
+    <ProgressBar
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/progressBar"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"/>
+
+</RelativeLayout>

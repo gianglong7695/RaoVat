@@ -58,6 +58,7 @@ import poly.fall16.pro2051.group8.raovat.R;
 import poly.fall16.pro2051.group8.raovat.helper.AppController;
 import poly.fall16.pro2051.group8.raovat.helper.SQLiteHandler;
 import poly.fall16.pro2051.group8.raovat.helper.SessionManager;
+import poly.fall16.pro2051.group8.raovat.utils.MyString;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
     Button btLogin, btSkip;
@@ -167,13 +168,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             String tag_string_req = "req_login";
             showDialog();
 
-            String mUrl = "http://demophp2.esy.es/user.php";
-            String URL ="http://demophp2.esy.es/user.php?action=login&&txtUsername=" + email + "&&txtPassword="+ password;
+            String URL = MyString.BASE_URL + "user.php?action=login&&txtUsername=" + email + "&&txtPassword="+ password;
             StringRequest strReq = new StringRequest(URL, new Response.Listener<String>() {
 
                 @Override
                 public void onResponse(String response) {
-                    Log.d("TAG", "Response: " + response.toString());
                     hideDialog();
                     try {
                         JSONObject jObj = new JSONObject(response);

@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.github.rahatarmanahmed.cpv.CircularProgressView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -21,8 +20,10 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.util.ArrayList;
 
-import poly.fall16.pro2051.group8.raovat.objects.PostObject;
 import poly.fall16.pro2051.group8.raovat.R;
+import poly.fall16.pro2051.group8.raovat.objects.PostObject;
+
+import static poly.fall16.pro2051.group8.raovat.utils.MyString.handingPrice;
 
 /**
  * Created by giang on 9/23/2016.
@@ -66,7 +67,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     public void onBindViewHolder(final ViewHolder holder, int position) {
         PostObject object = alPost.get(position);
         holder.title.setText(object.getTitle());
-        holder.price.setText(object.getPrice());
+        holder.price.setText(handingPrice(object.getPrice()));
         holder.time.setText(object.getTime());
 
         imageLoader.displayImage(object.getImage(), holder.image, options, new ImageLoadingListener() {

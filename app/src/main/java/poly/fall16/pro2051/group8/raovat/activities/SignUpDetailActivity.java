@@ -39,6 +39,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import poly.fall16.pro2051.group8.raovat.R;
 import poly.fall16.pro2051.group8.raovat.helper.AppController;
 
+import static poly.fall16.pro2051.group8.raovat.utils.MyString.URL_USER;
+
 public class SignUpDetailActivity extends AppCompatActivity {
     public static final int RESULT_LOAD_IMAGE = 1;
     Button btBack, btFinish;
@@ -115,9 +117,8 @@ public class SignUpDetailActivity extends AppCompatActivity {
         String tag_string_req = "req_login";
         showDialog();
 
-        String OLD_URL = "http://demophp2.esy.es/user.php";
         StringRequest strReq = new StringRequest(Request.Method.POST,
-                OLD_URL , new Response.Listener<String>() {
+                URL_USER , new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {

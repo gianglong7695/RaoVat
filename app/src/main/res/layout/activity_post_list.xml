@@ -12,7 +12,8 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/colorPrimary">
+        android:background="@color/colorPrimary"
+        android:theme="@style/ThemeToolbar">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -41,28 +42,6 @@
                 android:text="Xe cộ"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
-            <!--
-            <ImageView
-                android:id="@+id/ivBookmark"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="15dp"
-                android:src="@drawable/ic_bookmark_50px_white2" />
-
-            <ImageView
-                android:id="@+id/ivSearch"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginRight="12dp"
-                android:src="@drawable/ic_search_50px_white"
-                android:layout_alignTop="@+id/ivBookmark"
-                android:layout_toLeftOf="@+id/ivBookmark"
-                android:layout_toStartOf="@+id/ivBookmark"
-                android:layout_marginEnd="12dp" />
-            -->
 
         </RelativeLayout>
 
@@ -89,7 +68,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
+                    android:paddingRight="5dp"
                     android:background="@color/white"
                     android:orientation="horizontal">
 
@@ -115,18 +94,19 @@
                         android:layout_weight="2"></Spinner>
 
                     <Button
+                        android:id="@+id/btFilter"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_margin="5dp"
                         android:layout_weight="1"
-                        android:background="@drawable/custom_border_button"
+                        android:background="@drawable/custom_button_selector"
                         android:text="Lọc"
                         android:textAllCaps="false"
                         android:textSize="17sp"
                         android:textStyle="bold" />
                 </LinearLayout>
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="10dp">
@@ -134,12 +114,19 @@
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/rvItems"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:background="@color/background">
 
-                    </android.support.v7.widget.RecyclerView>
 
-                </LinearLayout>
+                    </android.support.v7.widget.RecyclerView>
+                    <ProgressBar
+                        android:id="@+id/progressBar"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"/>
+
+                </RelativeLayout>
             </LinearLayout>
 
 

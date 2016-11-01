@@ -11,10 +11,11 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:theme="@style/ThemeToolbar"
         android:background="@color/colorPrimary">
 
         <RelativeLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
@@ -28,7 +29,7 @@
                 android:src="@drawable/ic_back_50px_white_3" />
 
 
-
+            <!--
             <ImageView
                 android:id="@+id/ivMenu"
                 android:layout_width="25dp"
@@ -59,7 +60,7 @@
                 android:layout_marginRight="60dp"
                 android:src="@drawable/ic_share2_50px_white" />
 
-
+            -->
         </RelativeLayout>
 
     </android.support.v7.widget.Toolbar>
@@ -84,6 +85,7 @@
                     android:layout_alignParentStart="true">
 
                     <ImageView
+                        android:id="@+id/ivShowListImage"
                         android:layout_width="35dp"
                         android:layout_height="35dp"
                         android:src="@drawable/ic_fill_50px_white"
@@ -108,16 +110,14 @@
                     android:id="@+id/tvTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Nhà 3 tầng, 1 tum tại 172 Âu cơ, Từ liêm"
-                    android:textSize="17sp"
+                    android:textSize="18sp"
                     android:textColor="@color/black"/>
                 <TextView
                     android:id="@+id/tvPrice"
                     android:textColor="@color/redMoney"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="5.800.000.000 đ"/>
+                    android:layout_marginTop="5dp" />
 
                 <View
                     android:layout_width="match_parent"
@@ -140,8 +140,7 @@
                         <de.hdodenhof.circleimageview.CircleImageView
                             android:id="@+id/ivAvatar"
                             android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:src="@drawable/avatar_dg"/>
+                            android:layout_height="50dp" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -153,15 +152,13 @@
                                 android:id="@+id/tvUserName"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Giang Văn Long"
                                 android:textSize="17sp"
                                 android:textColor="@color/redMoney"/>
                             <TextView
                                 android:layout_marginTop="5dp"
                                 android:id="@+id/tvTime"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Hôm nay 21:49"/>
+                                android:layout_height="wrap_content" />
                         </LinearLayout>
                     </LinearLayout>
 
@@ -169,8 +166,7 @@
                         android:layout_marginTop="10dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/tvContent"
-                        android:text="- Nội dung"/>
+                        android:id="@+id/tvContent" />
 
                 </LinearLayout>
 

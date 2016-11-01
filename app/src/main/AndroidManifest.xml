@@ -59,7 +59,12 @@
             android:name=".activities.ProfileActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activities.InfomationActivity" />
-        <activity android:name=".activities.CategoryActivity"></activity>
+        <activity
+            android:name=".activities.CategoryActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.ShowImageActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

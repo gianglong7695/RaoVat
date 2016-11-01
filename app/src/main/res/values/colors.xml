@@ -8,11 +8,12 @@
 
     <!-- My colors -->
     <color name="colorPrimary">#fc364a</color>
-    <color name="colorPrimaryDark">#e23142</color>
+    <color name="colorPrimaryDark">#c42837</color>
     <color name="colorAccent">#fc364a</color>
     <color name="background">#efefef</color>
     <color name="bg2">#f4f4f4</color>
     <color name="grayLine">#cacaca</color>
+    <color name="bgButton">#fafafa</color>
 
     <!-- Basic colors -->
     <color name="white">#FFF</color>

@@ -13,10 +13,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -24,6 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -47,13 +49,13 @@ import poly.fall16.pro2051.group8.raovat.networks.MySingleton;
 import poly.fall16.pro2051.group8.raovat.objects.CityObject;
 import poly.fall16.pro2051.group8.raovat.objects.ImageObject;
 import poly.fall16.pro2051.group8.raovat.utils.MyString;
+import poly.fall16.pro2051.group8.raovat.utils.MyTextWatcher;
 
 import static poly.fall16.pro2051.group8.raovat.activities.SignUpDetailActivity.RESULT_LOAD_IMAGE;
 
 public class PushingPostActivity extends AppCompatActivity {
     MaterialBetterSpinner spCategory, spArea, spStatus;
     MaterialEditText etPrice, etName, etDetail, etAdress;
-    String[] categoryList = {"Xe cộ", "Bất động sản", "Đồ điện tử", "Thời trang, đồ dùng cá nhân", "..."};
     String[] arrStatus = {"Mới 100%", "Like new", "Cũ"};
     ArrayList arrCity;
     ArrayList<CityObject> alCity;
@@ -65,10 +67,11 @@ public class PushingPostActivity extends AppCompatActivity {
     RecyclerView rvImageSelecter;
     public static LinearLayout largeSelect, addPictureView;
     ImageView ivBackButton;
-    int statusChoice, categoryChoice;
+    int  categoryChoice;
+    String statusChoice, areaChoice;
     Button btUpload;
     private ProgressDialog pDialog;
-
+    String txtPrice = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,37 +85,20 @@ public class PushingPostActivity extends AppCompatActivity {
         alBaseImage = new ArrayList<>();
 
         // Handling Spinner
-        ArrayAdapter<String> adapterCategory = new ArrayAdapter<String>(this,
-                android.R.layout.simple_dropdown_item_1line, categoryList);
-
+        ArrayAdapter<String> adapterCategory = new ArrayAdapter<>(this,
+                android.R.layout.simple_dropdown_item_1line, MyString.arrCategory);
         spCategory.setAdapter(adapterCategory);
 
         adapterCity = new ArrayAdapter<>(this,
                 android.R.layout.simple_dropdown_item_1line, arrCity);
         spArea.setAdapter(adapterCity);
 
-        ArrayAdapter<String> adapterStatus = new ArrayAdapter<String>(this,
+        ArrayAdapter<String> adapterStatus = new ArrayAdapter<>(this,
                 android.R.layout.simple_dropdown_item_1line, arrStatus);
 
         spStatus.setAdapter(adapterStatus);
 
-        // Editext
-//        etPrice.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable editable) {
-//                Toast.makeText(PushingPostActivity.this, "Edited !", Toast.LENGTH_SHORT).show();
-//            }
-//        });
+
 
         imageSelectAdapter = new ImageSelectAdapter(alImage, getApplicationContext());
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -120,30 +106,30 @@ public class PushingPostActivity extends AppCompatActivity {
         rvImageSelecter.setItemAnimator(new DefaultItemAnimator());
         rvImageSelecter.setAdapter(imageSelectAdapter);
 
-        spStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spArea.addTextChangedListener(new MyTextWatcher() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                statusChoice = i;
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
+            public void afterTextChanged(Editable editable) {
+                areaChoice = spArea.getText().toString();
             }
         });
 
 
-        spCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spStatus.addTextChangedListener(new MyTextWatcher() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                categoryChoice = i;
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
+            public void afterTextChanged(Editable editable) {
+                statusChoice = spStatus.getText().toString();
             }
         });
+
+
+        spCategory.addTextChangedListener(new MyTextWatcher() {
+            @Override
+            public void afterTextChanged(Editable editable) {
+                categoryChoice = convertPositionSpinner(spCategory.getText().toString());
+            }
+        });
+
+        //handlingEdittextPrice();
 
 
         largeSelect.setOnClickListener(new View.OnClickListener() {
@@ -246,6 +232,7 @@ public class PushingPostActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.push_down_in, R.anim.push_down_out);
     }
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -301,7 +288,8 @@ public class PushingPostActivity extends AppCompatActivity {
                     Toast.makeText(getBaseContext(), response, Toast.LENGTH_LONG).show();
                     // Check for error node in json
                     if (!error) {
-
+                        onBackPressed();
+                        finish();
                     } else {
                         // Error in login. Get the error message
                         String errorMsg = jObj.getString("error_msg");
@@ -332,26 +320,27 @@ public class PushingPostActivity extends AppCompatActivity {
                 params.put("txtName", etName.getText().toString());
                 params.put("txtAddress", etAdress.getText().toString());
                 params.put("txtDescription", etDetail.getText().toString());
-                params.put("txtQuality", arrStatus[statusChoice]);
-                params.put("txtCategory", categoryList[categoryChoice]);
+                params.put("txtQuality", statusChoice);
+                params.put("txtCategory", MyString.arrCategoryServer[categoryChoice]);
                 params.put("txtPrice", etPrice.getText().toString());
                 params.put("txtUsername", MainActivity.tvName.getText().toString());
+                params.put("txtCity", areaChoice);
                 ArrayList<String> listBaseImage = new ArrayList<>();
-                for (int i = 0; i < alImage.size(); i++){
+                for (int i = 0; i < alImage.size(); i++) {
                     listBaseImage.add(alImage.get(i).baseImage);
                 }
 
                 JSONArray jsonArray = new JSONArray(alBaseImage);
 
                 params.put("txtImage", alBaseImage.get(0).toString());
-                params.put("JSON",jsonArray.toString());
+                params.put("JSON", jsonArray.toString());
                 params.put("action", "insert");
 
                 return params;
             }
 
         };
-
+        strReq.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         MySingleton.getInstance(getApplicationContext()).addToRequestQueue(strReq);
 
     }
@@ -370,6 +359,52 @@ public class PushingPostActivity extends AppCompatActivity {
     private void hideDialog() {
         if (pDialog.isShowing())
             pDialog.dismiss();
+    }
+
+    public int convertPositionSpinner(String strItem) {
+        int position = 0;
+        if (strItem.equals(MyString.arrCategory[1])) {
+            position = 1;
+        } else if (strItem.equals(MyString.arrCategory[2])) {
+            position = 2;
+        } else if (strItem.equals(MyString.arrCategory[3])) {
+            position = 3;
+        } else if (strItem.equals(MyString.arrCategory[4])) {
+            position = 4;
+        } else if (strItem.equals(MyString.arrCategory[5])) {
+            position = 5;
+        } else if (strItem.equals(MyString.arrCategory[6])) {
+            position = 6;
+        } else if (strItem.equals(MyString.arrCategory[7])) {
+            position = 7;
+        } else if (strItem.equals(MyString.arrCategory[8])) {
+            position = 8;
+        }
+        return position;
+    }
+
+    public void handlingEdittextPrice(){
+        etPrice.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                txtPrice = etPrice.getText().toString();
+                if(txtPrice.length()%3 == 0){
+                    txtPrice = txtPrice + ".";
+                    etPrice.setText(txtPrice);
+                    etPrice.setSelection(txtPrice.length());
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 
 }

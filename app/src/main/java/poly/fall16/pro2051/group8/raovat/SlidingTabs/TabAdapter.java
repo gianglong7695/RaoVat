@@ -17,7 +17,7 @@ import poly.fall16.pro2051.group8.raovat.fragments.OtherFragment;
 public class TabAdapter extends FragmentPagerAdapter {
     Context mContext;
 
-    CharSequence Titles[] = {"Danh mục", "Liên lạc", "Thông báo", "Khác"};
+    CharSequence Titles[] = {"Mới nhất", "Tin nhắn", "Thông báo", "Khác"};
     //String[] titles = {"Comporation", "Money"};
     //int [] icons = {R.drawable.comporation_blue, R.drawable.money_blue};
     int heightIcon;

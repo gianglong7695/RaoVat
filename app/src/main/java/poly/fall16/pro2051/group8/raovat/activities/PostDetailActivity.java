@@ -1,10 +1,14 @@
 package poly.fall16.pro2051.group8.raovat.activities;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -32,26 +36,44 @@ import poly.fall16.pro2051.group8.raovat.networks.MySingleton;
 import poly.fall16.pro2051.group8.raovat.objects.ProductDetailObject;
 import poly.fall16.pro2051.group8.raovat.utils.MyString;
 
+import static poly.fall16.pro2051.group8.raovat.utils.MyString.handingPrice;
+
 public class PostDetailActivity extends AppCompatActivity {
     SliderLayout sliderShow;
     String product_id = "";
     ImageView ivUserAvatar;
     TextView tvTitle, tvPrice, tvUserName, tvTime, tvContent;
+    ImageView ivShowListImage;
 
     ImageLoader imageLoader;
     DisplayImageOptions options;
+    ImageView ivBackButton;
+    public static ProductDetailObject productDetailObject;
+    private boolean isFavoriteChecked = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_detail);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
         setViews();
+        setIvBackButton();
+
         product_id = getIntent().getExtras().getString("product_id");
         handlingNetwork(product_id);
         setImageLoader();
 
+        ivShowListImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            Intent it = new Intent(getApplicationContext(), ShowImageActivity.class);
+            startActivity(it);
+            }
+        });
 
-
-        //sliderShow.setCustomIndicator((PagerIndicator) v.findViewById(R.id.custom_indicator));
 
 
     }
@@ -64,8 +86,50 @@ public class PostDetailActivity extends AppCompatActivity {
         tvTime = (TextView) findViewById(R.id.tvTime);
         tvContent = (TextView) findViewById(R.id.tvContent);
         ivUserAvatar = (ImageView) findViewById(R.id.ivAvatar);
-
+        ivShowListImage = (ImageView) findViewById(R.id.ivShowListImage);
+        ivBackButton = (ImageView) findViewById(R.id.ivBackButton);
     }
+
+    public void setIvBackButton() {
+        ivBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+    }
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem checkable = menu.findItem(R.id.action_favorite);
+        checkable.setChecked(isFavoriteChecked);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_favorite:
+                isFavoriteChecked = !item.isChecked();
+                item.setChecked(isFavoriteChecked);
+                if(isFavoriteChecked){
+                    item.setIcon(getResources().getDrawable(R.drawable.ic_heart_50px_white_fill_padding25));
+                }else{
+                    item.setIcon(getResources().getDrawable(R.drawable.ic_heart_50px_white_padding25));
+                }
+                return true;
+            default:
+                return false;
+        }
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_acitivty_postdetail, menu);
+        return true;
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -83,9 +147,8 @@ public class PostDetailActivity extends AppCompatActivity {
                     JSONObject jsonObject = new JSONObject(response);
 
                     String str = jsonObject.getString("product");
-                    ProductDetailObject productDetailObject = gson.fromJson(str, ProductDetailObject.class);
+                    productDetailObject = gson.fromJson(str, ProductDetailObject.class);
                     setData(productDetailObject);
-
 
 
                 } catch (JSONException e) {
@@ -103,23 +166,26 @@ public class PostDetailActivity extends AppCompatActivity {
     }
 
 
-    public void setData(ProductDetailObject object){
-        for (int i = 0; i < object.img_url.size(); i++){
+    public void setData(ProductDetailObject object) {
+        for (int i = 0; i < object.img_url.size(); i++) {
             sliderShow.addSlider(new TextSliderView(getApplicationContext()).image(object.img_url.get(i)));
         }
         sliderShow.setPresetTransformer(SliderLayout.Transformer.DepthPage);
         sliderShow.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
         sliderShow.setCustomAnimation(new DescriptionAnimation());
         sliderShow.setDuration(4000);
+        if (object.img_url.size() == 1) {
+            sliderShow.stopAutoCycle();
+        }
 
 
         tvTime.setText(object.date);
         tvContent.setText(object.description);
-        tvPrice.setText(object.price);
+        tvPrice.setText(handingPrice(object.price));
         tvUserName.setText(object.username);
         tvTitle.setText(object.name);
 
-        imageLoader.displayImage( object.profile_url , ivUserAvatar, options, new ImageLoadingListener() {
+        imageLoader.displayImage(object.profile_url, ivUserAvatar, options, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {
                 //holder.progressBar.setVisibility(View.VISIBLE);
@@ -142,7 +208,7 @@ public class PostDetailActivity extends AppCompatActivity {
         });
     }
 
-    public void setImageLoader(){
+    public void setImageLoader() {
         // ImageLoader
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);

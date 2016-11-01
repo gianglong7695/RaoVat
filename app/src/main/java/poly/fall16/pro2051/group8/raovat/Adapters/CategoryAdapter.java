@@ -9,32 +9,31 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-
-import poly.fall16.pro2051.group8.raovat.objects.CategoryObject;
 import poly.fall16.pro2051.group8.raovat.R;
+import poly.fall16.pro2051.group8.raovat.objects.CategoryObject;
 
 /**
- * Created by giang on 9/20/2016.
+ * Created by giang on 10/13/2016.
  */
 
-public class CategoryAdapter extends BaseAdapter {
+public class CategoryAdapter extends BaseAdapter{
+    ArrayList<CategoryObject> alCategory;
+    Context mContext;
     LayoutInflater mInflater;
-    ArrayList<CategoryObject> list;
-    Context context;
 
-    public CategoryAdapter(Context context, ArrayList<CategoryObject> list) {
-        this.context = context;
-        this.list = list;
+    public CategoryAdapter(Context mContext, ArrayList<CategoryObject> alCategory) {
+        this.mContext = mContext;
+        this.alCategory = alCategory;
     }
 
     @Override
     public int getCount() {
-        return list.size();
+        return alCategory.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return list.get(i);
+        return alCategory.get(i);
     }
 
     @Override
@@ -45,18 +44,19 @@ public class CategoryAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         if(mInflater == null){
-            mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
         if(view == null){
-            view = mInflater.inflate(R.layout.custom_row_category_item, null);
+            view = mInflater.inflate(R.layout.row_category, null);
 
         }
-        ImageView background = (ImageView) view.findViewById(R.id.ivBG);
-        TextView title = (TextView) view.findViewById(R.id.tvTitle);
 
-        CategoryObject object = list.get(i);
-        background.setImageResource(object.getBackground());
-        title.setText(object.getTitle());
+        ImageView logo = (ImageView) view.findViewById(R.id.ivLogo);
+        TextView name = (TextView) view.findViewById(R.id.tvName);
+
+        CategoryObject object = alCategory.get(i);
+        logo.setImageResource(object.getLogo());
+        name.setText(object.getName());
 
 
         return view;

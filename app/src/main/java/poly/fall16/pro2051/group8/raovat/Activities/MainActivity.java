@@ -33,11 +33,14 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import poly.fall16.pro2051.group8.raovat.R;
 import poly.fall16.pro2051.group8.raovat.helper.SQLiteHandler;
 import poly.fall16.pro2051.group8.raovat.helper.SessionManager;
+import poly.fall16.pro2051.group8.raovat.objects.PostObject;
+import poly.fall16.pro2051.group8.raovat.objects.ProductObject;
 import poly.fall16.pro2051.group8.raovat.slidingtabs.SlidingTabLayout;
 import poly.fall16.pro2051.group8.raovat.slidingtabs.TabAdapter;
 
@@ -59,6 +62,11 @@ public class MainActivity extends AppCompatActivity
     DisplayImageOptions options;
     ProgressBar progressBar;
     LinearLayout content_main;
+
+    public static ArrayList<ProductObject> alProduct;
+    public static ArrayList<PostObject> alPost;
+    public static String msg = "Chào mừng trở lại!";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -145,8 +153,8 @@ public class MainActivity extends AppCompatActivity
         mSlidingTabLayout.setCustomTabView(R.layout.tab_view, R.id.tv_tab);
         mSlidingTabLayout.setViewPager(mViewPager);
 
-        Snackbar.make(content_main, "Chào mừng trở lại!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-
+        Snackbar.make(content_main, msg , Snackbar.LENGTH_LONG).setAction("Action", null).show();
+        setOther();
     }
 
     @Override
@@ -215,6 +223,13 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         switch (item.getItemId()){
+            case R.id.nav_category:
+            {
+                Intent intent = new Intent(MainActivity.this, CategoryActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out);
+            }
+                break;
             case R.id.nav_history:
 
                 break;
@@ -292,5 +307,10 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onQueryTextChange(String newText) {
         return false;
+    }
+
+    public void setOther(){
+        alProduct = new ArrayList<>();
+        alPost = new ArrayList<>();
     }
 }

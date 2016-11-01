@@ -1,31 +1,31 @@
 package poly.fall16.pro2051.group8.raovat.objects;
 
 /**
- * Created by giang on 9/20/2016.
+ * Created by giang on 10/13/2016.
  */
 
 public class CategoryObject {
-    private String title;
-    private int background;
+    private int logo;
+    private String name;
 
-    public CategoryObject(String title, int background) {
-        this.title = title;
-        this.background = background;
+    public CategoryObject(int logo, String name) {
+        this.logo = logo;
+        this.name = name;
     }
 
-    public String getTitle() {
-        return title;
+    public int getLogo() {
+        return logo;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setLogo(int logo) {
+        this.logo = logo;
     }
 
-    public int getBackground() {
-        return background;
+    public String getName() {
+        return name;
     }
 
-    public void setBackground(int background) {
-        this.background = background;
+    public void setName(String name) {
+        this.name = name;
     }
 }
