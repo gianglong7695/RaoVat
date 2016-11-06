@@ -47,6 +47,7 @@ public class CategoryFragment extends Fragment {
     ArrayList<PostObject> alNews;
     PostAdapter adapter;
     ProgressBar progressBar;
+    CountDownTimer timer;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -137,6 +138,12 @@ public class CategoryFragment extends Fragment {
         super.onResume();
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        timer.cancel();
+    }
+
     public void updateNews(){
         MainActivity.alProduct.clear();
         MainActivity.alPost.clear();
@@ -145,7 +152,7 @@ public class CategoryFragment extends Fragment {
     }
 
     public void autoCheckNews(int totalTime, int time){
-        CountDownTimer timer = new CountDownTimer(totalTime, time) {
+        timer = new CountDownTimer(totalTime, time) {
             @Override
             public void onTick(long l) {
 
@@ -183,6 +190,7 @@ public class CategoryFragment extends Fragment {
                 });
                 MySingleton.getInstance(getActivity()).addToRequestQueue(requestLastItem);
                 autoCheckNews(MyString.TIME_CALLBACK_GETNEWS, 1);
+
             }
         };
 

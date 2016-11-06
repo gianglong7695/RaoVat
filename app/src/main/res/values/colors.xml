@@ -37,4 +37,6 @@
     <color name="searchTextColor">#616161</color>
     <color name="defaultColor">#424242</color>
     <color name="priceColor">#eb8a34</color>
+    <color name="brand_red">#d51826</color>
+    <color name="transparent">#00000000</color>
 </resources>

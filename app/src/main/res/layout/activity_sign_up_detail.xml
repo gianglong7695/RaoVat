@@ -58,6 +58,8 @@
                 app:met_iconLeft="@drawable/ic_phone_50px_white"
                 app:met_iconPadding="0dp"
                 app:met_primaryColor="@color/white"
+                app:met_minCharacters="9"
+                app:met_maxCharacters="11"
                 android:id="@+id/etPhone" />
 
             <com.rengwuxian.materialedittext.MaterialEditText

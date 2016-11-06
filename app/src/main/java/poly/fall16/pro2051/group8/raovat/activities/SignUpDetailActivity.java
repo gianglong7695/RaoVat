@@ -34,6 +34,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import poly.fall16.pro2051.group8.raovat.R;
@@ -72,14 +74,40 @@ public class SignUpDetailActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String userName = SignUpActivity.etUser.getText().toString();
                 String password = SignUpActivity.etPass.getText().toString();
-                String rePassword = SignUpActivity.etRePass.getText().toString();
                 String name = etName.getText().toString();
                 String phone = etPhone.getText().toString();
                 String mail = etMail.getText().toString();
                 String address = etAddress.getText().toString();
 
                 if(isSignIn){
-                    checkReg(userName, name, mail, phone, password, address);
+                    if(name.length() == 0){
+                        etName.setError("Không được để trống!");
+                        etName.requestFocus();
+                    }else if(phone.length() == 0){
+                        etPhone.setError("Không được để trống!");
+                        etPhone.requestFocus();
+                    }else if(mail.length() == 0){
+                        etMail.setError("Không được để trống!");
+                        etMail.requestFocus();
+                    }else if(address.length() == 0){
+                        etAddress.setError("Không được để trống!");
+                        etAddress.requestFocus();
+                    }else {
+                        if(phone.length() > 9 && phone.length() < 12){
+                            if(isValidEmailAddress(mail)){
+                                //checkReg(userName, name, mail, phone, password, address);
+                                Toast.makeText(SignUpDetailActivity.this, "Oke", Toast.LENGTH_SHORT).show();
+                            }else {
+                                etMail.setError("Định dạng Email không hợp lệ!");
+                                etMail.requestFocus();
+                            }
+
+                        }else{
+                            etPhone.setError("Độ dài không hợp lệ!");
+                            etPhone.requestFocus();
+                        }
+                    }
+
                 }
 
             }
@@ -137,8 +165,6 @@ public class SignUpDetailActivity extends AppCompatActivity {
                     } else {
                         // Error in login. Get the error message
                         String errorMsg = jObj.getString("error_msg");
-                        Toast.makeText(getApplicationContext(),
-                                errorMsg, Toast.LENGTH_LONG).show();
                     }
                 } catch (JSONException e) {
                     // JSON error
@@ -169,7 +195,6 @@ public class SignUpDetailActivity extends AppCompatActivity {
                 params.put("txtFullName",fullname);
                 params.put("txtImage", encodedImage);
                 params.put("txtAddress", address);
-
                 params.put("action","register");
                 return params;
             }
@@ -268,5 +293,17 @@ public class SignUpDetailActivity extends AppCompatActivity {
         BitmapFactory.Options o2 = new BitmapFactory.Options();
         o2.inSampleSize = scale;
         return BitmapFactory.decodeStream(c.getContentResolver().openInputStream(uri), null, o2);
+    }
+
+    public static boolean isValidEmailAddress(String emailAddress) {
+        String emailRegEx = "^[A-Za-z0-9._%+\\-]+@[A-Za-z0-9.\\-]+\\.[A-Za-z]{2,4}$";
+        Pattern pattern;
+        // Compare the regex with the email address
+        pattern = Pattern.compile(emailRegEx);
+        Matcher matcher = pattern.matcher(emailAddress);
+        if (!matcher.find()) {
+            return false;
+        }
+        return true;
     }
 }

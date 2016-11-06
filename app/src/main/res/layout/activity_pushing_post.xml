@@ -60,7 +60,7 @@
             <RelativeLayout
                 android:id="@+id/layoutPushImg"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
@@ -87,7 +87,7 @@
                 <LinearLayout
                     android:id="@+id/largeSelect"
                     android:layout_width="match_parent"
-                    android:layout_height="185dp"
+                    android:layout_height="195dp"
                     android:layout_alignParentTop="true"
                     android:layout_centerVertical="true"
                     android:gravity="center"

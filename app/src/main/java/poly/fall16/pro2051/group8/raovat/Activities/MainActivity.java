@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity
     ViewPager mViewPager;
     private boolean isCloseApp = false;
     private SQLiteHandler db;
-    private SessionManager session;
+    public static SessionManager session;
     NavigationView navigationView;
     View headerLayout;
     SearchView searchView;
@@ -82,9 +82,14 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent it = new Intent(getApplicationContext(), PushingPostActivity.class);
-                startActivity(it);
-                overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out);
+                if(session.isLoggedIn()){
+                    Intent it = new Intent(getApplicationContext(), PushingPostActivity.class);
+                    startActivity(it);
+                    overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out);
+                }else{
+                    Toast.makeText(MainActivity.this, "Bạn phải đăng nhập mới có thể dùng chức năng này!", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
@@ -234,10 +239,28 @@ public class MainActivity extends AppCompatActivity
 
                 break;
             case R.id.nav_favorite:
+            {
+                if(session.isLoggedIn()){
+                    Intent intent = new Intent(MainActivity.this, FavoriteActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out);
+                }else{
+                    Toast.makeText(this, "Bạn phải đăng nhập mới có thể dùng chức năng này!", Toast.LENGTH_SHORT).show();
+                }
 
+            }
                 break;
             case R.id.nav_my_post:
+            {
+                if(session.isLoggedIn()){
+                    Intent intent = new Intent(MainActivity.this, MyPostsActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out);
+                }else{
+                    Toast.makeText(this, "Bạn phải đăng nhập mới có thể dùng chức năng này!", Toast.LENGTH_SHORT).show();
+                }
 
+            }
                 break;
             // Other options
             case R.id.nav_share:

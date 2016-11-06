@@ -12,6 +12,7 @@
             android:id="@+id/nav_history"
             android:icon="@drawable/ic_book_50px_white"
             android:title="Lịch sử giao dịch" />
+
         <item
             android:id="@+id/nav_favorite"
             android:icon="@drawable/ic_heart_50px_white"

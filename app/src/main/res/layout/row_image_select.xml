@@ -7,13 +7,12 @@
         android:layout_width="100dp"
         android:layout_height="100dp">
         <ImageView
-            android:scaleType="fitXY"
             android:background="@drawable/custom_border"
             android:id="@+id/ivImg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:src="@drawable/avatar_dg"
-            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
             android:layout_margin="5dp"
             android:padding="5dp"
             android:layout_centerVertical="true"/>

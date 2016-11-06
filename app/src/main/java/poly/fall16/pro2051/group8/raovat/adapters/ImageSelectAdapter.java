@@ -17,6 +17,8 @@ import poly.fall16.pro2051.group8.raovat.R;
 import poly.fall16.pro2051.group8.raovat.activities.PushingPostActivity;
 import poly.fall16.pro2051.group8.raovat.objects.ImageObject;
 
+import static poly.fall16.pro2051.group8.raovat.activities.PushingPostActivity.alBaseImage;
+
 /**
  * Created by giang on 10/15/2016.
  */
@@ -53,6 +55,7 @@ public class ImageSelectAdapter extends RecyclerView.Adapter<ImageSelectAdapter.
             @Override
             public void onClick(View view) {
                 alImage.remove(position);
+                alBaseImage.remove(position);
                 notifyDataSetChanged();
                 if(alImage.size() == 0){
                     PushingPostActivity.largeSelect.setVisibility(View.VISIBLE);
@@ -89,11 +92,11 @@ public class ImageSelectAdapter extends RecyclerView.Adapter<ImageSelectAdapter.
         int scale = 1;
 
         while(true) {
-            if(width_tmp / 2 < requiredSize || height_tmp / 2 < requiredSize)
+            if(width_tmp / 2.5 < requiredSize || height_tmp / 2.5 < requiredSize)
                 break;
-            width_tmp /= 2;
-            height_tmp /= 2;
-            scale *= 2;
+            width_tmp /= 2.5;
+            height_tmp /= 2.5;
+            scale *= 2.5;
         }
 
         BitmapFactory.Options o2 = new BitmapFactory.Options();

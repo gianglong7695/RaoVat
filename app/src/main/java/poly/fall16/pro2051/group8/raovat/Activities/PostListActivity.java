@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -20,6 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -39,7 +41,7 @@ import java.util.ArrayList;
 import poly.fall16.pro2051.group8.raovat.R;
 import poly.fall16.pro2051.group8.raovat.adapters.PostAdapter;
 import poly.fall16.pro2051.group8.raovat.networks.MySingleton;
-import poly.fall16.pro2051.group8.raovat.objects.CategoryObject;
+import poly.fall16.pro2051.group8.raovat.objects.BookmarkObject;
 import poly.fall16.pro2051.group8.raovat.objects.CityObject;
 import poly.fall16.pro2051.group8.raovat.objects.PostObject;
 import poly.fall16.pro2051.group8.raovat.objects.ProductObject;
@@ -47,7 +49,11 @@ import poly.fall16.pro2051.group8.raovat.utils.MyString;
 import poly.fall16.pro2051.group8.raovat.utils.RecyclerItemClickListener;
 import poly.fall16.pro2051.group8.raovat.utils.SimpleDividerItemDecoration;
 
-public class PostListActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, SearchView.OnQueryTextListener{
+import static poly.fall16.pro2051.group8.raovat.utils.MyString.URL_ADD_BOOKMARK_PART1;
+import static poly.fall16.pro2051.group8.raovat.utils.MyString.URL_ADD_BOOKMARK_PART2;
+import static poly.fall16.pro2051.group8.raovat.utils.MyString.URL_REMOVE_BOOKMARK_PART1;
+
+public class PostListActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, SearchView.OnQueryTextListener {
     ImageView ivBackButton;
     Button btFilter;
     ProgressBar progressBar;
@@ -67,6 +73,11 @@ public class PostListActivity extends AppCompatActivity implements SwipeRefreshL
     boolean isBookMark = false;
     int categoryChoice;
     StringRequest requestProducts;
+    int position;
+
+    ArrayList<BookmarkObject> alBookmark;
+    LinearLayout content_main;
+    String msg_bookmark = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,20 +85,21 @@ public class PostListActivity extends AppCompatActivity implements SwipeRefreshL
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setViews();
-        URL = getURL(Integer.parseInt(getIntent().getExtras().get("position").toString()));
-        if(getIntent().getExtras().get("position").toString().equals("9")){
-            tvLable.setText("Tổng hợp");
-        }else{
-            tvLable.setText(MyString.arrCategory[Integer.parseInt(getIntent().getExtras().get("position").toString())]);
-        }
-
-
         setBackButton();
+        position = Integer.parseInt(getIntent().getExtras().get("position").toString());
+
+        URL = getURL(position);
+        if (position == 9) {
+            tvLable.setText("Tổng hợp");
+        } else {
+            tvLable.setText(MyString.arrCategory[position]);
+        }
 
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorSchemeColors(Color.RED, Color.GREEN, Color.BLUE, Color.CYAN);
 
         alPost = new ArrayList<>();
+        alBookmark = new ArrayList<>();
 
         adapter = new PostAdapter(alPost);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -100,7 +112,7 @@ public class PostListActivity extends AppCompatActivity implements SwipeRefreshL
             @Override
             public void onItemClick(View view, int position) {
                 Intent it = new Intent(PostListActivity.this, PostDetailActivity.class);
-                it.putExtra("product_id",alProduct.get(position).pid);
+                it.putExtra("product_id", alProduct.get(position).pid);
                 startActivity(it);
                 overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
             }
@@ -112,12 +124,14 @@ public class PostListActivity extends AppCompatActivity implements SwipeRefreshL
         }));
 
 
-
         arrCategoryTitle = getCategoryTitle();
         ArrayAdapter adapterCategory = new ArrayAdapter(this, android.R.layout.simple_spinner_item, arrCategoryTitle);
         adapterCategory.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spCategory.setAdapter(adapterCategory);
-        spCategory.setSelection(Integer.parseInt(getIntent().getExtras().get("position").toString()));
+        if (position != 9) {
+            spCategory.setSelection(position);
+
+        }
 
         spCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -138,7 +152,6 @@ public class PostListActivity extends AppCompatActivity implements SwipeRefreshL
         spCity.setAdapter(adapterCity);
 
 
-
         // API handling network
         StringRequest request = new StringRequest(MyString.URL_CITY, new Response.Listener<String>() {
             @Override
@@ -147,7 +160,7 @@ public class PostListActivity extends AppCompatActivity implements SwipeRefreshL
                     Gson gson = new Gson();
                     JSONObject jsonObject = new JSONObject(response);
                     JSONArray jsonArray = jsonObject.getJSONArray("data");
-                    for (int i = 0; i < jsonArray.length(); i++){
+                    for (int i = 0; i < jsonArray.length(); i++) {
                         String str = jsonArray.getString(i);
 
                         // Define Response class to correspond to the JSON response returned
@@ -156,7 +169,6 @@ public class PostListActivity extends AppCompatActivity implements SwipeRefreshL
                     }
 
                     adapterCity.notifyDataSetChanged();
-
 
 
                 } catch (JSONException e) {
@@ -174,9 +186,10 @@ public class PostListActivity extends AppCompatActivity implements SwipeRefreshL
         MySingleton.getInstance(this).addToRequestQueue(request);
         getDataFromServer();
         filter();
+
     }
 
-    public void setViews(){
+    public void setViews() {
         rvPost = (RecyclerView) findViewById(R.id.rvItems);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         spCity = (Spinner) findViewById(R.id.spCity);
@@ -185,9 +198,10 @@ public class PostListActivity extends AppCompatActivity implements SwipeRefreshL
         ivBackButton = (ImageView) findViewById(R.id.ivBackButton);
         tvLable = (TextView) findViewById(R.id.tvLable);
         btFilter = (Button) findViewById(R.id.btFilter);
+        content_main = (LinearLayout) findViewById(R.id.activity_login);
     }
 
-    public void setBackButton(){
+    public void setBackButton() {
         ivBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -199,7 +213,10 @@ public class PostListActivity extends AppCompatActivity implements SwipeRefreshL
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem checkable = menu.findItem(R.id.action_bookmark);
-        checkable.setChecked(isBookMark);
+        checkBookmark(checkable);
+        if(position == 9){
+            checkable.setVisible(false);
+        }
         return true;
     }
 
@@ -210,10 +227,11 @@ public class PostListActivity extends AppCompatActivity implements SwipeRefreshL
                 isBookMark = !item.isChecked();
                 item.setChecked(isBookMark);
                 if(isBookMark){
-                    item.setIcon(getResources().getDrawable(R.drawable.ic_bookmark_50px_white_fill_padding25));
+                    addBookmark();
                 }else{
-                    item.setIcon(getResources().getDrawable(R.drawable.ic_bookmark_50px_white_padding25));
+                    removeBookmark();
                 }
+                updateMenuIcon(item);
                 return true;
             default:
                 return false;
@@ -234,6 +252,7 @@ public class PostListActivity extends AppCompatActivity implements SwipeRefreshL
         searchEditText.setHintTextColor(getResources().getColor(R.color.teal));
         //set OnQueryTextListener cho search view để thực hiện search theo text
         searchView.setOnQueryTextListener(this);
+        super.onCreateOptionsMenu(menu);
         return true;
     }
 
@@ -247,7 +266,7 @@ public class PostListActivity extends AppCompatActivity implements SwipeRefreshL
     @Override
     public void onRefresh() {
         Toast.makeText(this, "Đang làm mới ...", Toast.LENGTH_SHORT).show();
-
+        checkNew();
         CountDownTimer timer = new CountDownTimer(4000, 1) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -263,20 +282,20 @@ public class PostListActivity extends AppCompatActivity implements SwipeRefreshL
         timer.start();
     }
 
-    public ArrayList getCategoryTitle(){
+    public ArrayList getCategoryTitle() {
         ArrayList arrCategory = new ArrayList();
-        ArrayList<CategoryObject> list = CategoryActivity.alCategory;
-        for (int i = 0; i < list.size(); i++){
-            arrCategory.add(list.get(i).getName());
+        String[] arr = MyString.arrCategory;
+        for (int i = 0; i < arr.length; i++) {
+            arrCategory.add(arr[i]);
         }
 
-        return  arrCategory;
+        return arrCategory;
     }
 
-    public String getURL(int position){
-        if(position == MyString.arrCategory.length){
+    public String getURL(int position) {
+        if (position == MyString.arrCategory.length) {
             URL = MyString.URL_PRODUCTS;
-        }else{
+        } else {
             URL = MyString.URL_GET_CATEGORY + MyString.arrCategoryServer[position];
         }
         return URL;
@@ -294,7 +313,7 @@ public class PostListActivity extends AppCompatActivity implements SwipeRefreshL
         return false;
     }
 
-    public void filter(){
+    public void filter() {
         btFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -305,17 +324,16 @@ public class PostListActivity extends AppCompatActivity implements SwipeRefreshL
         });
     }
 
-    public void getDataFromServer(){
+    public void getDataFromServer() {
         alProduct = new ArrayList<>();
         requestProducts = new StringRequest(URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
-                    Log.d("URL", URL);
                     Gson gson = new Gson();
                     JSONObject jsonObject = new JSONObject(response);
                     JSONArray jsonArray = jsonObject.getJSONArray("product");
-                    for (int i = 0; i < jsonArray.length(); i++){
+                    for (int i = 0; i < jsonArray.length(); i++) {
                         String str = jsonArray.getString(i);
 
                         // Define Response class to correspond to the JSON response returned
@@ -341,5 +359,195 @@ public class PostListActivity extends AppCompatActivity implements SwipeRefreshL
         });
 
         MySingleton.getInstance(this).addToRequestQueue(requestProducts);
+    }
+
+
+    public void checkNew() {
+        String URL_CHECK;
+        if (position != 9) {
+            URL_CHECK = MyString.URL_GET_LAST_ITEM_CATEGORY + MyString.arrCategoryServer[position];
+        } else {
+            URL_CHECK = MyString.URL_GET_LAST_ITEM;
+        }
+        StringRequest requestLastItem = new StringRequest(URL_CHECK, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    Gson gson = new Gson();
+                    JSONObject jsonObject = new JSONObject(response);
+                    JSONArray jsonArray = jsonObject.getJSONArray("product");
+                    JSONObject object = jsonArray.getJSONObject(0);
+                    String id = object.getString("pid");
+
+                    if (alProduct.size() > 0) {
+                        if (!alProduct.get(0).pid.equals(id)) {
+                            updateNews();
+                        }
+                    }
+
+
+                } catch (JSONException e) {
+                    Log.e("JSONException", e.toString());
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("VolleyError", error.toString());
+            }
+        });
+        MySingleton.getInstance(this).addToRequestQueue(requestLastItem);
+    }
+
+
+    public void updateNews() {
+        alProduct.clear();
+        alPost.clear();
+        getDataFromServer();
+    }
+
+    public void checkBookmark(final MenuItem menu) {
+        if (MainActivity.session.isLoggedIn()) {
+            StringRequest requestBookmark = new StringRequest(MyString.URL_GET_BOOKMARK + MainActivity.tvName.getText().toString(), new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        Gson gson = new Gson();
+                        JSONObject jsonObject = new JSONObject(response);
+                        JSONArray jsonArray = jsonObject.getJSONArray("bookmark");
+                        for (int i = 0; i < jsonArray.length(); i++){
+                            String str = jsonArray.getString(i);
+                            BookmarkObject bookmarkObject = gson.fromJson(str, BookmarkObject.class);
+                            alBookmark.add(bookmarkObject);
+                        }
+
+                        for (int i = 0; i < alBookmark.size(); i++){
+                            if(position != 9) {
+                                if (MyString.arrCategoryServer[position].equals(alBookmark.get(i).category)) {
+                                    isBookMark = true;
+                                    menu.setChecked(isBookMark);
+                                    updateMenuIcon(menu);
+                                }
+                            }
+                        }
+
+                    } catch (JSONException e) {
+                        Log.e("JSONException", e.toString());
+                    }
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("VolleyError", error.toString());
+                }
+            });
+            MySingleton.getInstance(this).addToRequestQueue(requestBookmark);
+        }
+    }
+
+
+
+
+    public void addBookmark() {
+        if (MainActivity.session.isLoggedIn()) {
+            if (position != 9) {
+                String URL = URL_ADD_BOOKMARK_PART1 + MainActivity.tvName.getText().toString() + URL_ADD_BOOKMARK_PART2 + MyString.arrCategoryServer[position];
+                Log.d("DG", URL);
+                StringRequest requestBookmark = new StringRequest(URL, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            Gson gson = new Gson();
+                            JSONObject jsonObject = new JSONObject(response);
+                            String id = jsonObject.getString("error");
+
+                            if(id.equals("true")){
+                                msg_bookmark = "Không thể thêm bookmark!";
+                                Snackbar.make(content_main, msg_bookmark , Snackbar.LENGTH_LONG).show();
+                            }else{
+                                msg_bookmark = "Bạn đã đăng ký nhận thông báo thành công!";
+                                Snackbar.make(content_main, msg_bookmark , Snackbar.LENGTH_LONG).setAction("Hoàn tác", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        Toast.makeText(PostListActivity.this, "Đã hoàn tác!", Toast.LENGTH_SHORT).show();
+                                    }
+                                }).show();
+                            }
+
+                        } catch (JSONException e) {
+                            Log.e("JSONException", e.toString());
+                        }
+
+                        Log.d("DG", response.toString());
+
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("VolleyError", error.toString());
+                    }
+                });
+                MySingleton.getInstance(this).addToRequestQueue(requestBookmark);
+            }
+
+        }
+
+    }
+
+    public void removeBookmark() {
+        if (MainActivity.session.isLoggedIn()) {
+            if (position != 9) {
+                String URL = URL_REMOVE_BOOKMARK_PART1 + MainActivity.tvName.getText().toString() + URL_ADD_BOOKMARK_PART2 + MyString.arrCategoryServer[position];
+                Log.d("DG", URL);
+                StringRequest requestBookmark = new StringRequest(URL, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            Gson gson = new Gson();
+                            JSONObject jsonObject = new JSONObject(response);
+                            String id = jsonObject.getString("error");
+
+                            if(id.equals("true")){
+                                msg_bookmark = "Không thể xóa bookmark!";
+                                Snackbar.make(content_main, msg_bookmark , Snackbar.LENGTH_LONG).show();
+                            }else{
+                                msg_bookmark = "Bạn đã hủy nhận thông báo!";
+                                Snackbar.make(content_main, msg_bookmark , Snackbar.LENGTH_LONG).setAction("Hoàn tác", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        Toast.makeText(PostListActivity.this, "Đã hoàn tác!", Toast.LENGTH_SHORT).show();
+                                    }
+                                }).show();
+                            }
+
+
+                        } catch (JSONException e) {
+                            Log.e("JSONException", e.toString());
+                        }
+
+                        Log.d("DG", response.toString());
+
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("VolleyError", error.toString());
+                    }
+                });
+                MySingleton.getInstance(this).addToRequestQueue(requestBookmark);
+            }
+
+        }
+
+    }
+
+    public void updateMenuIcon(MenuItem item){
+        if (isBookMark) {
+            item.setIcon(getResources().getDrawable(R.drawable.ic_bookmark_50px_white_fill_padding25));
+        } else {
+            item.setIcon(getResources().getDrawable(R.drawable.ic_bookmark_50px_white_padding25));
+        }
     }
 }

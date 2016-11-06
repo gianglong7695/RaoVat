@@ -65,7 +65,7 @@
         app:met_iconPadding="0dp"
         app:met_minCharacters="5"
         app:met_singleLineEllipsis="true"
-        android:imeOptions="actionDone"
+        android:imeOptions="actionSend"
         app:met_maxCharacters="16"
         app:met_clearButton="true"
         app:met_primaryColor="@color/white"

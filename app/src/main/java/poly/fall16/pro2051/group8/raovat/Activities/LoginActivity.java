@@ -396,10 +396,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         String tag_string_req = "req_login";
         showDialog();
 
-        String OLD_URL = "http://demophp2.esy.es/user.php";
-
         StringRequest strReq = new StringRequest(Request.Method.POST,
-                OLD_URL , new Response.Listener<String>() {
+                MyString.URL_USER , new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {

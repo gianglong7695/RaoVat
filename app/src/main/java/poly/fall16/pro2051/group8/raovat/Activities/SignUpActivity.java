@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -37,15 +39,48 @@ public class SignUpActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (etUser.getText().toString().equals("")) {
                     etUser.setError("Không được để trống!");
+                    etUser.requestFocus();
                 } else if (etPass.getText().toString().equals("")) {
                     etPass.setError("Không được để trống!");
+                    etPass.requestFocus();
                 } else if (etRePass.getText().toString().equals("")) {
                     etRePass.setError("Không được để trống!");
+                    etRePass.requestFocus();
                 }else {
-                    Intent it = new Intent(getApplicationContext(), SignUpDetailActivity.class);
-                    startActivity(it);
-                    overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+                    if(etUser.getText().toString().trim().length() > 5 && etUser.getText().toString().trim().length() < 16){
+                        if (etPass.getText().toString().trim().length() < 5 || etPass.getText().toString().trim().length() > 16) {
+                            etPass.setError("Độ dài không hợp lệ!");
+                            etPass.requestFocus();
+                        } else if (etRePass.getText().toString().trim().length() < 5 || etRePass.getText().toString().trim().length() > 16) {
+                            etRePass.setError("Độ dài không hợp lệ!");
+                            etRePass.requestFocus();
+                        }else{
+                            if(etPass.getText().toString().equals(etRePass.getText().toString())){
+                                Intent it = new Intent(getApplicationContext(), SignUpDetailActivity.class);
+                                startActivity(it);
+                                overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+                            }else{
+                                etRePass.setError("Mật khẩu không khớp!");
+                                etRePass.requestFocus();
+                            }
+                        }
+                    }else {
+                        etUser.setError("Độ dài không hợp lệ!");
+                        etUser.requestFocus();
+                    }
+
                 }
+            }
+        });
+
+        etRePass.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (i == EditorInfo.IME_ACTION_SEND) {
+                    btSignUp.performClick();
+                    return true;
+                }
+                return false;
             }
         });
     }

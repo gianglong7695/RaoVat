@@ -62,16 +62,19 @@ public class PushingPostActivity extends AppCompatActivity {
     ArrayAdapter<String> adapterCity;
     RelativeLayout layoutPushImg;
     ArrayList<ImageObject> alImage;
-    ArrayList<String> alBaseImage;
+    public static ArrayList<String> alBaseImage;
     ImageSelectAdapter imageSelectAdapter;
-    RecyclerView rvImageSelecter;
+    RecyclerView rvImageSelecter, rvPropose;
     public static LinearLayout largeSelect, addPictureView;
     ImageView ivBackButton;
-    int  categoryChoice;
+    int categoryChoice;
     String statusChoice, areaChoice;
     Button btUpload;
     private ProgressDialog pDialog;
     String txtPrice = "";
+    private static final int CAMERA_REQUEST = 1888;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,7 +100,6 @@ public class PushingPostActivity extends AppCompatActivity {
                 android.R.layout.simple_dropdown_item_1line, arrStatus);
 
         spStatus.setAdapter(adapterStatus);
-
 
 
         imageSelectAdapter = new ImageSelectAdapter(alImage, getApplicationContext());
@@ -130,7 +132,6 @@ public class PushingPostActivity extends AppCompatActivity {
         });
 
         //handlingEdittextPrice();
-
 
         largeSelect.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -216,6 +217,7 @@ public class PushingPostActivity extends AppCompatActivity {
         etPrice = (MaterialEditText) findViewById(R.id.etPrice);
         layoutPushImg = (RelativeLayout) findViewById(R.id.layoutPushImg);
         rvImageSelecter = (RecyclerView) findViewById(R.id.rvImgItems);
+        rvPropose = (RecyclerView) findViewById(R.id.rvPropose);
         largeSelect = (LinearLayout) findViewById(R.id.largeSelect);
         addPictureView = (LinearLayout) findViewById(R.id.addPictureView);
         addPictureView.setVisibility(View.GONE);
@@ -238,6 +240,7 @@ public class PushingPostActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null) {
             Uri selectImg = data.getData();
+
             alImage.add(new ImageObject(selectImg, getStringImage(getRealPathFromURI(getApplicationContext(), selectImg))));
             alBaseImage.add(getStringImage(getRealPathFromURI(getApplicationContext(), selectImg)));
             imageSelectAdapter.notifyDataSetChanged();
@@ -247,6 +250,8 @@ public class PushingPostActivity extends AppCompatActivity {
             } else {
                 addPictureView.setVisibility(View.GONE);
             }
+
+
         }
     }
 
@@ -263,6 +268,7 @@ public class PushingPostActivity extends AppCompatActivity {
                 cursor.close();
             }
         }
+
     }
 
     public String getStringImage(String path) {
@@ -285,11 +291,11 @@ public class PushingPostActivity extends AppCompatActivity {
                 try {
                     JSONObject jObj = new JSONObject(response);
                     boolean error = jObj.getBoolean("error");
-                    Toast.makeText(getBaseContext(), response, Toast.LENGTH_LONG).show();
                     // Check for error node in json
                     if (!error) {
                         onBackPressed();
                         finish();
+                        Toast.makeText(PushingPostActivity.this, "Đăng sản phẩm thành công!", Toast.LENGTH_SHORT).show();
                     } else {
                         // Error in login. Get the error message
                         String errorMsg = jObj.getString("error_msg");
@@ -383,7 +389,7 @@ public class PushingPostActivity extends AppCompatActivity {
         return position;
     }
 
-    public void handlingEdittextPrice(){
+    public void handlingEdittextPrice() {
         etPrice.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -393,7 +399,7 @@ public class PushingPostActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 txtPrice = etPrice.getText().toString();
-                if(txtPrice.length()%3 == 0){
+                if (txtPrice.length() % 3 == 0) {
                     txtPrice = txtPrice + ".";
                     etPrice.setText(txtPrice);
                     etPrice.setSelection(txtPrice.length());
